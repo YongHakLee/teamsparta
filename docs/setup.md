@@ -6,13 +6,13 @@ GitHub Pages에 배포하기 위한 **사전 준비 설정** 문서입니다.
 
 ## 결정된 구성
 
-| 항목 | 선택 |
-|---|---|
+| 항목        | 선택                                               |
+| ----------- | -------------------------------------------------- |
 | 저장소 구조 | 이 저장소(`teamsparta`) 하나에 Next.js 사이트 하나 |
-| 페이지 구성 | `/resume`, `/portfolio` 두 페이지 |
-| 최종 주소 | `https://yonghaklee.github.io/teamsparta/` |
-| 배포 방식 | GitHub Actions 자동 배포 (main에 push하면 배포) |
-| 기술 스택 | Next.js (App Router) + TypeScript + Tailwind CSS |
+| 페이지 구성 | `/resume`, `/portfolio` 두 페이지                  |
+| 최종 주소   | `https://yonghaklee.github.io/teamsparta/`         |
+| 배포 방식   | GitHub Actions 자동 배포 (main에 push하면 배포)    |
+| 기술 스택   | Next.js (App Router) + TypeScript + Tailwind CSS   |
 
 > GitHub Pages는 무료 계정에서 **Public 저장소**만 지원합니다.
 > 이 저장소는 현재 Public이므로 문제없습니다.
@@ -88,14 +88,14 @@ cat /tmp/teamsparta-backup/README.md   # 기존 내용 확인용
 
 각 옵션의 의미:
 
-| 옵션 | 의미 |
-|---|---|
-| `--ts` | TypeScript 사용 |
-| `--tailwind` | Tailwind CSS 포함 |
-| `--eslint` | 코드 검사 도구 ESLint 포함 |
-| `--app` | App Router 사용 (현재 표준 라우팅 방식) |
-| `--src-dir` | 소스 코드를 `src/` 폴더 아래로 정리 |
-| `--turbopack` | 개발 서버에 Turbopack(빠른 번들러) 사용 |
+| 옵션                   | 의미                                                |
+| ---------------------- | --------------------------------------------------- |
+| `--ts`                 | TypeScript 사용                                     |
+| `--tailwind`           | Tailwind CSS 포함                                   |
+| `--eslint`             | 코드 검사 도구 ESLint 포함                          |
+| `--app`                | App Router 사용 (현재 표준 라우팅 방식)             |
+| `--src-dir`            | 소스 코드를 `src/` 폴더 아래로 정리                 |
+| `--turbopack`          | 개발 서버에 Turbopack(빠른 번들러) 사용             |
 | `--import-alias "@/*"` | `import x from "@/components/..."` 형태의 경로 별칭 |
 
 > 버전에 따라 옵션 이름이 바뀌어 "unknown option" 오류가 날 수 있습니다.
