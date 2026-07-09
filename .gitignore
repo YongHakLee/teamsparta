@@ -42,5 +42,13 @@ next-env.d.ts
 
 # Claude
 CLAUDE.md
+AGENTS.md
 docs/
 prompt.md
+.superpowers/
+
+# 원본 이미지 (웹용 사본은 public/images/ 에 커밋됨)
+/images/
+
+# etc
+samsung.html
