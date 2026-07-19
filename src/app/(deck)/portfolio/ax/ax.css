@@ -1,0 +1,233 @@
+/* AX 덱 전용 스타일. 슬라이드 내부는 em 단위 — .ax-slide의 font-size가 화면/인쇄 스케일을 결정한다. */
+
+/* ── 문서 스크롤 스냅 (덱 페이지가 열렸을 때만) ── */
+html:has(.ax-deck) {
+  scroll-snap-type: y mandatory;
+}
+
+.ax-deck {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.ax-mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
+.ax-acc { color: var(--accent); }
+.ax-mut { color: var(--muted); }
+.ax-fnt { color: var(--faint); }
+
+/* ── 슬라이드 프레임 ── */
+.ax-viewport {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+}
+
+.ax-slide {
+  width: min(100vw, calc(100dvh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  /* 슬라이드 짧은 변의 1/33.75 ≈ 데스크톱에서 16px 내외 */
+  font-size: calc(min(100vw, 100dvh * 16 / 9) / 60);
+  padding: 2.2em 2.8em;
+  display: flex;
+  flex-direction: column;
+}
+
+.ax-ebrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.65em;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+}
+
+.ax-title {
+  font-size: 1.7em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin-top: 0.65em;
+}
+
+.ax-tagline {
+  font-size: 0.8em;
+  color: var(--muted);
+  margin-top: 0.45em;
+}
+
+/* ── 본문 2컬럼 + 로그 레일 ── */
+.ax-cols { display: flex; gap: 2.2em; flex: 1; margin-top: 1.2em; min-height: 0; }
+.ax-col { flex: 1.35; border-top: 1px solid var(--ink); padding-top: 0.75em; }
+.ax-h {
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--faint);
+}
+.ax-works { margin-top: 0.6em; font-size: 0.75em; line-height: 1.65; list-style: none; padding: 0; }
+.ax-works li + li { margin-top: 0.55em; }
+.ax-results { font-size: 0.75em; margin-top: 0.5em; }
+
+.ax-log {
+  width: 33%;
+  border-left: 1px solid var(--hairline);
+  padding-left: 1.4em;
+  font-size: 0.68em;
+  line-height: 2.15;
+}
+.ax-log .ax-log-head { color: var(--faint); }
+.ax-log .ax-log-note { color: var(--muted); }
+
+/* ── 기술 칩 스트립 ── */
+.ax-chips {
+  border-top: 1px solid var(--hairline);
+  padding-top: 0.7em;
+  margin-top: 1em;
+  font-size: 0.62em;
+  color: var(--faint);
+}
+.ax-chip {
+  display: inline-block;
+  border: 1px solid var(--hairline);
+  padding: 0.15em 0.7em;
+  margin-right: 0.5em;
+  margin-bottom: 0.3em;
+}
+
+/* ── 역량 맵 매트릭스 ── */
+.ax-matrix { width: 100%; border-collapse: collapse; font-size: 0.7em; margin-top: 1.2em; }
+.ax-matrix th, .ax-matrix td {
+  border-bottom: 1px solid var(--hairline);
+  padding: 0.55em 0.8em;
+  text-align: left;
+  vertical-align: top;
+}
+.ax-matrix thead th { border-bottom: 1px solid var(--ink); }
+.ax-matrix .ax-none { color: var(--hairline); }
+
+/* ── 표지 · 마무리 ── */
+.ax-cover { justify-content: center; }
+.ax-cover .ax-cover-title {
+  font-size: 2.6em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.ax-center { align-items: center; text-align: center; justify-content: center; }
+
+/* ── 인쇄/화면 전환 ── */
+.ax-print-only { display: none; }
+
+@media (orientation: portrait), (max-width: 700px) {
+  html:has(.ax-deck) { scroll-snap-type: none; }
+  .ax-viewport { min-height: 0; padding: 1.5rem 0; }
+  .ax-slide {
+    width: 100%;
+    aspect-ratio: auto;
+    font-size: clamp(11px, 2.9vw, 15px);
+    padding: 1.6em 1.4em;
+  }
+  .ax-cols { flex-direction: column; gap: 1.2em; }
+  .ax-log { width: 100%; border-left: none; border-top: 1px solid var(--hairline); padding: 0.8em 0 0; }
+  .ax-figs { flex-direction: column; }
+  .ax-figbox, .ax-grid2 { max-height: 40vh; }
+}
+
+/* ── 증빙 슬라이드 ── */
+.ax-figs { display: flex; gap: 1.1em; flex: 1; margin-top: 1.1em; min-height: 0; }
+.ax-fig { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.ax-figbox {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--hairline);
+  background: #fff;
+  overflow: hidden;
+  padding: 0;
+  cursor: zoom-in;
+}
+.ax-figbox img, .ax-figbox video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ax-figbox video { object-fit: contain; background: #000; }
+.ax-figcap { font-size: 0.62em; margin-top: 0.5em; color: var(--muted); }
+.ax-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4em; flex: 1; min-height: 0; }
+.ax-grid2 > * { border: 1px solid var(--hairline); overflow: hidden; cursor: zoom-in; padding: 0; background: #fff; }
+.ax-grid2 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ax-more { display: flex; align-items: center; justify-content: center; font-size: 0.8em; color: var(--muted); }
+.ax-notebox { border: 1px solid var(--hairline); padding: 0.9em 1em; font-size: 0.68em; line-height: 1.9; }
+
+/* ── 라이트박스 ── */
+.ax-lightbox {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(38, 32, 25, 0.92);
+  display: flex; align-items: center; justify-content: center;
+  padding: 3vh 4vw;
+}
+.ax-lightbox img { max-width: 100%; max-height: 92vh; object-fit: contain; background: #fff; }
+.ax-lightbox button {
+  position: absolute; background: none; border: none; color: #faf7f1;
+  font-size: 28px; cursor: pointer; padding: 12px;
+}
+.ax-lightbox .ax-lb-close { top: 10px; right: 16px; }
+.ax-lightbox .ax-lb-prev { left: 8px; top: 50%; transform: translateY(-50%); }
+.ax-lightbox .ax-lb-next { right: 8px; top: 50%; transform: translateY(-50%); }
+.ax-lightbox .ax-lb-count {
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  color: #faf7f1; font-size: 12px;
+}
+
+/* ── 덱 크롬 (웹 전용 고정 UI) ── */
+.ax-chrome {
+  position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 40;
+}
+.ax-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1px solid var(--faint); background: transparent;
+  padding: 0; cursor: pointer;
+}
+.ax-dot[aria-current="true"] { background: var(--accent); border-color: var(--accent); }
+.ax-chrome-count { font-size: 11px; color: var(--faint); }
+.ax-pdf-btn {
+  position: fixed; right: 18px; top: 18px; z-index: 40;
+  border: 1px solid var(--hairline); background: var(--paper); color: var(--muted);
+  font-size: 12px; padding: 6px 12px; cursor: pointer;
+}
+.ax-pdf-btn:hover { color: var(--ink); border-color: var(--ink); }
+@media (orientation: portrait), (max-width: 700px) {
+  .ax-chrome { display: none; }
+}
+/* 부팅 로그 타이핑: 줄 단위 표시 */
+.ax-bootline { visibility: hidden; }
+.ax-bootline.ax-on { visibility: visible; }
+@media (prefers-reduced-motion: reduce) {
+  .ax-bootline { visibility: visible; }
+}
+
+/* ── PDF 안내장 · QR ── */
+.ax-notice-why { list-style: none; padding: 0; margin-top: 1em; font-size: 0.8em; line-height: 2; }
+.ax-qr { display: inline-block; width: 6em; height: 6em; margin-top: 1.4em; }
+.ax-qr svg { width: 100%; height: 100%; }
+.ax-qr-lg { width: 9em; height: 9em; }
+.ax-qr-sm { width: 4.5em; height: 4.5em; margin-top: 1.2em; }
+
+@media print {
+  @page { size: A4 landscape; margin: 0; }
+  html:has(.ax-deck) { scroll-snap-type: none; }
+  .ax-deck { background: #fff; }
+  .ax-viewport { min-height: 0; display: block; }
+  .ax-slide {
+    width: 297mm;
+    height: 209mm;
+    aspect-ratio: auto;
+    font-size: 4.9mm;
+    break-after: page;
+  }
+  .ax-web-only { display: none !important; }
+  .ax-print-only { display: flex !important; }
+  .ax-notice { display: flex !important; }
+  .ax-chips .ax-print-only { display: inline !important; }
+  .ax-figbox, .ax-grid2 > * { cursor: default; }
+  .ax-bootline { visibility: visible; }
+  .ax-lightbox { display: none !important; }
+}

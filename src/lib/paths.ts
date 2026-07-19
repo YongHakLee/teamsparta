@@ -4,3 +4,6 @@
 export const BASE_PATH = "/teamsparta";
 
 export const asset = (path: string) => `${BASE_PATH}${path}`;
+
+// 배포 원본 주소. QR·절대 URL 표기는 SITE_ORIGIN + BASE_PATH + 경로로 만든다.
+export const SITE_ORIGIN = "https://yonghaklee.github.io";

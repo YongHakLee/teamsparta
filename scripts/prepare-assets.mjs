@@ -63,4 +63,42 @@ for (const [name, id] of THUMBS) {
   console.log(`lectures/${name}.jpg 완료`);
 }
 
+// ── AX 덱 이미지: projects/ 원본 → public/images/ax/ 웹용 가공 ──
+const AX_SETS = [
+  {
+    src: "projects/datavoucher",
+    dest: "public/images/ax/datavoucher",
+    files: [
+      "result1.png", "result2.png", "result3.png",
+      "estimate1.png", "estimate2.png", "estimate3.png",
+      "estimate4.png", "estimate5.png", "estimate6.png",
+      "estimate7.png", "estimate8.png", "estimate9.png",
+    ],
+  },
+  {
+    src: "projects/3D_reverse_engineering",
+    dest: "public/images/ax/3d",
+    files: ["eval.png"],
+  },
+];
+
+for (const set of AX_SETS) {
+  await mkdir(set.dest, { recursive: true });
+  for (const name of set.files) {
+    const src = path.join(set.src, name);
+    const out = path.join(set.dest, name);
+    await sharp(src)
+      .resize({ width: 1600, height: 1600, fit: "inside", withoutEnlargement: true })
+      .png({ compressionLevel: 9 })
+      .toFile(out);
+    const [{ size: outSize }, { size: srcSize }] = [await stat(out), await stat(src)];
+    if (outSize > srcSize) {
+      await copyFile(src, out);
+      console.log(`ax/${name}: ${(srcSize / 1024).toFixed(0)}KB (원본 유지)`);
+    } else {
+      console.log(`ax/${name}: ${(outSize / 1024).toFixed(0)}KB`);
+    }
+  }
+}
+
 console.log("DONE");
