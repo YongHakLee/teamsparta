@@ -282,6 +282,30 @@ html:has(.ax-deck) {
 .ax-qr-lg { width: 9em; height: 9em; }
 .ax-qr-sm { width: 4.5em; height: 4.5em; margin-top: 1.2em; }
 
+/* ── 마지막 슬라이드 하단: 이력서 · 포트폴리오로 돌아가는 링크 ── */
+.ax-links {
+  display: flex;
+  gap: 0.6em;
+  justify-content: center;
+  margin-top: 1.5em;
+}
+.ax-link {
+  font-size: 0.7em;
+  padding: 0.5em 1.1em;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+.ax-link:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+/* 인쇄용 주소 줄 — .ax-print-only의 display:flex가 걸리면 텍스트 노드가
+   낱개 플렉스 아이템으로 쪼개져 띄어쓰기가 사라진다. block으로 되돌린다. */
+.ax-links-print { margin-top: 1.2em; }
+
 /* ── 인쇄: 용지 자체를 16:9로 잡는다 ──
    A4에 얹으면 위아래에 빈 띠가 남으므로, 용지 크기를 슬라이드 비율(297×167mm)에
    맞춘다. 용지와 슬라이드 치수가 정확히 같아야 빈 페이지가 끼지 않는다.
@@ -323,6 +347,7 @@ html:has(.ax-deck) {
   .ax-print-only { display: flex !important; }
   .ax-viewport.ax-print-only { display: block !important; }
   .ax-figbox.ax-print-only { display: block !important; }
+  .ax-links-print { display: block !important; }
   .ax-chips .ax-print-only { display: inline !important; }
   .ax-figbox, .ax-grid2 > * { cursor: default; }
   .ax-bootline { visibility: visible; }
