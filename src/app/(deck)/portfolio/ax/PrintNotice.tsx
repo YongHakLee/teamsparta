@@ -13,7 +13,7 @@ export default function PrintNotice() {
         <ul className="ax-notice-why ax-mut">
           <li>시연 영상을 바로 재생할 수 있습니다</li>
           <li>견적서·결과 이미지를 원본 크기로 확대할 수 있습니다</li>
-          <li>항상 최신본이 유지됩니다</li>
+          <li>배포된 서비스를 QR로 열어 직접 대화해 볼 수 있습니다</li>
         </ul>
         <Qr text={url} className="ax-qr-lg" />
         <p className="ax-tagline ax-mono">{url}</p>

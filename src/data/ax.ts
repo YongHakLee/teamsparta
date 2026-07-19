@@ -5,10 +5,15 @@ export type PipelineStep = { step: string; note: string };
 export type WorkItem = { lead: string; text: string };
 
 export type EvidenceItem =
-  | { kind: "image"; src: string; alt: string; caption: string }
+  // fit: "contain" — 문서 스캔처럼 잘리면 안 되는 이미지 (기본은 채우기)
+  | { kind: "image"; src: string; alt: string; caption: string; fit?: "contain" }
   | { kind: "gallery"; images: { src: string; alt: string }[]; caption: string }
   | { kind: "video"; src: string; poster: string; caption: string }
-  | { kind: "note"; title: string; lines: string[] };
+  | { kind: "note"; title: string; lines: string[] }
+  // 배포된 서비스 자체가 증빙인 경우 — QR로 인쇄본에서도 바로 열 수 있다
+  | { kind: "links"; items: { label: string; url: string; note: string }[]; caption: string }
+  // 화면으로 보여줄 수 없는 동작(에이전트 한 턴)을 흐름으로 보여준다
+  | { kind: "flow"; title: string; steps: { actor: string; text: string }[]; caption: string };
 
 export type AxProject = {
   code: string; // "AX-01"
@@ -30,8 +35,8 @@ export const deckMeta = {
   thesis: "데이터 생성부터 배포까지 — AI 에이전트와 함께 풀스택을 완성합니다",
   path: "/portfolio/ax", // BASE_PATH 뒤에 붙는 경로
   bootLog: [
-    { step: "init", note: "AX portfolio" },
-    { step: "load", note: "projects (2)" },
+    { step: "init", note: "AI Agent / Full-stack AX" },
+    { step: "load", note: "projects (3)" },
     { step: "render", note: "slides" },
     { step: "ready", note: "↓ 스크롤로 시작" },
   ],
@@ -58,17 +63,21 @@ export const axProjects: AxProject[] = [
         lead: "아비넨",
         text: "파프리카 10,000건 + 길이·둘레·무게 계측 데이터 · Keypoint",
       },
+      {
+        lead: "이미지 생성 모델(FLUX) 활용",
+        text: "실촬영으로 닿지 않는 조명·배경·결함 조건을 프롬프트 조건화로 합성해 데이터 편중을 메움 — 생성 이미지도 동일 검수 기준으로 통과시켜 납품",
+      },
     ],
     pipeline: [
       { step: "collect", note: "실촬영 수집" },
-      { step: "flux", note: "합성 생성" },
+      { step: "generate", note: "FLUX 이미지 생성" },
       { step: "labelme", note: "시드 라벨링" },
       { step: "train", note: "YOLO 3태스크" },
       { step: "auto", note: "자동 라벨링" },
       { step: "deliver", note: "납품·검수" },
     ],
     tech: [
-      "FLUX",
+      "FLUX (이미지 생성 모델)",
       "Prompt Conditioning",
       "LabelMe",
       "Ultralytics YOLO",
@@ -163,12 +172,103 @@ export const axProjects: AxProject[] = [
         kind: "image",
         src: "/images/ax/3d/eval.png",
         alt: "AI 바우처 시험성적서",
+        fit: "contain",
         caption: "AI 바우처 시험성적서 — Cloud 2 Cad, 성능목표 적합(임펠러·케이싱·샤프트)",
       },
       {
         kind: "note",
         title: "데모 웹 직접 사용해 보기",
         lines: ["http://203.252.147.199:4005", "ID admin · PW admin1234"],
+      },
+    ],
+  },
+  {
+    code: "AX-03",
+    slug: "sparta",
+    name: "AI 쇼핑 어시스턴트",
+    title: "스파르타전자 온라인몰 — 대화형 AI 쇼핑 어시스턴트",
+    tagline: "기획·개발 단독 수행 — 필터 조작 대신 한 문장으로 끝나는 커머스 탐색",
+    role: "기획·개발 단독 수행",
+    works: [
+      {
+        lead: "Tool Calling 에이전트 루프",
+        text: "모델이 필요하다고 판단할 때 스스로 search_products를 호출하고 결과를 컨텍스트에 되먹여 답변 — 챗봇 UI가 아니라 에이전트 루프가 서비스의 핵심 동작",
+      },
+      {
+        lead: "환각 억제 · 신뢰 경계",
+        text: "추천 전 반드시 실제 DB를 조회하게 설계하고, 스펙에 없으면 '확인 불가'로 답변. 모델이 반환한 도구 인자는 화이트리스트·타입 검증을 거쳐야 쿼리가 됨",
+      },
+      {
+        lead: "루프 안정화",
+        text: "도구 호출이 반복되면 답변 없이 폴백되던 문제를 마지막 회차에 도구를 제거하는 구조로 해결",
+      },
+      {
+        lead: "풀스택 · 무중단 전환",
+        text: "Next.js 16 웹과 Express 5 API를 분리 구축. Prisma 인트로스펙션으로 운영 스키마를 역으로 읽어 데이터 마이그레이션 없이 BaaS → 독립 API 서버 전환",
+      },
+    ],
+    pipeline: [
+      { step: "seed", note: "LLM 상품 40·리뷰 132" },
+      { step: "schema", note: "Supabase · RLS" },
+      { step: "api", note: "Express 5 · Prisma" },
+      { step: "agent", note: "Tool Calling 루프" },
+      { step: "test", note: "Vitest 42개" },
+      { step: "ship", note: "Vercel push 배포" },
+    ],
+    tech: [
+      "Anthropic API (claude-sonnet-5)",
+      "Tool Calling 에이전트 루프",
+      "Next.js 16 · React 19",
+      "Express 5 · Prisma 6",
+      "Supabase (PostgreSQL · RLS)",
+      "Vitest",
+      "Claude Code",
+      "Vercel CI/CD",
+    ],
+    results: ["실서비스 배포 완료", "기획부터 배포까지 완주", "테스트 42개"],
+    evidence: [
+      {
+        kind: "flow",
+        title: "에이전트 한 턴 — 도구를 부르는 쪽은 모델이다",
+        steps: [
+          { actor: "user", text: '"20만원대 노이즈캔슬링 이어폰 추천해줘"' },
+          { actor: "model", text: "search_products(category, priceMax, keyword, sort) 호출을 스스로 판단" },
+          { actor: "guard", text: "도구 인자를 화이트리스트·타입 검증 후에만 쿼리로 변환" },
+          { actor: "db", text: "Supabase에서 조건에 맞는 실제 상품을 조회" },
+          { actor: "model", text: "조회 결과만 근거로 답변 — 마지막 회차엔 도구를 빼 반드시 답하게" },
+        ],
+        caption: "챗봇 UI가 아니라 이 루프가 서비스의 핵심 동작입니다",
+      },
+      {
+        kind: "links",
+        items: [
+          {
+            label: "서비스 (배포)",
+            url: "https://sparta-online-shop.vercel.app",
+            note: "카탈로그 → 상품 상세 → AI 대화 추천",
+          },
+          {
+            label: "소스코드",
+            url: "https://github.com/YongHakLee/sparta-project",
+            note: "에이전트 루프 · 인자 검증 · Vitest 42개",
+          },
+          {
+            label: "API",
+            url: "https://sparta-api.vercel.app/api/products",
+            note: "Express 5 · Prisma — 웹과 분리 배포",
+          },
+        ],
+        caption: "QR로 지금 열어서 직접 대화해 볼 수 있습니다",
+      },
+      {
+        kind: "note",
+        title: "다음 단계 — RAG 지식 에이전트",
+        lines: [
+          "하이브리드 검색 (BM25 + 벡터)",
+          "→ RRF 융합 → LLM 재순위화",
+          "평가셋 기반 Recall@5 · 환각률 측정",
+          "* 상품·리뷰는 시연용 생성 데이터",
+        ],
       },
     ],
   },
@@ -180,21 +280,39 @@ export type StackLayer = { layer: string; cells: (string | null)[] };
 export const stackLayers: StackLayer[] = [
   {
     layer: "데이터 생성·수집",
-    cells: ["FLUX 합성 + 실촬영 30,000건", "3D 스캔 포인트 클라우드"],
+    cells: [
+      "이미지 생성 모델(FLUX) 합성 + 실촬영 30,000건",
+      "3D 스캔 포인트 클라우드",
+      "LLM 시드 생성 — 상품 40 · 리뷰 132",
+    ],
   },
   {
     layer: "라벨링·가공",
-    cells: ["LabelMe 시드 → YOLO 자동 라벨링", "세그멘테이션 전처리"],
+    cells: ["LabelMe 시드 → YOLO 자동 라벨링", "세그멘테이션 전처리", "실존 상표 일괄 치환"],
   },
   {
     layer: "모델 학습·추론",
-    cells: ["YOLO Detection · Seg · Pose", "SIREN 곡면 피팅 · point2cad"],
+    cells: [
+      "YOLO Detection · Seg · Pose",
+      "SIREN 곡면 피팅 · point2cad",
+      "Tool Calling 에이전트 루프",
+    ],
   },
-  { layer: "백엔드 · API", cells: [null, "FastAPI · JWT · 비동기 변환"] },
-  { layer: "프론트엔드", cells: [null, "Next.js 16 · Three.js 미리보기"] },
-  { layer: "배포 · 인프라", cells: [null, "Docker Compose"] },
+  {
+    layer: "백엔드 · API",
+    cells: [null, "FastAPI · JWT · 비동기 변환", "Express 5 · Prisma 인트로스펙션"],
+  },
+  {
+    layer: "프론트엔드",
+    cells: [null, "Next.js 16 · Three.js 미리보기", "Next.js 16 · shadcn/ui 채팅 UX"],
+  },
+  { layer: "배포 · 인프라", cells: [null, "Docker Compose", "Vercel 2개 프로젝트 · CI/CD"] },
   {
     layer: "AI Agent 워크플로우",
-    cells: ["학습 모델 기반 Pseudo-labeling 자동화", "Claude Code + MCP 개발 주도"],
+    cells: [
+      "학습 모델 기반 Pseudo-labeling 자동화",
+      "Claude Code + MCP 개발 주도",
+      "브레인스토밍 → 스펙 → TDD 구현 파이프라인",
+    ],
   },
 ];

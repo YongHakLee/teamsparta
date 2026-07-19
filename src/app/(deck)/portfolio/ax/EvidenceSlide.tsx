@@ -1,10 +1,23 @@
 import SlideFrame from "./SlideFrame";
 import EvidenceFigures from "./EvidenceFigures";
+import { qrSvg } from "./Qr";
 import type { AxProject } from "@/data/ax";
-import { asset } from "@/lib/paths";
 
-export default function EvidenceSlide({ p, no, total }: { p: AxProject; no: number; total: number }) {
-  const video = p.evidence.find((e) => e.kind === "video");
+export default async function EvidenceSlide({
+  p,
+  no,
+  total,
+}: {
+  p: AxProject;
+  no: number;
+  total: number;
+}) {
+  // link 증빙의 QR은 빌드 시점에 서버에서 그려 클라이언트 컴포넌트로 넘긴다
+  const urls = p.evidence.flatMap((e) => (e.kind === "links" ? e.items.map((l) => l.url) : []));
+  const qrSvgs = Object.fromEntries(
+    await Promise.all(urls.map(async (url) => [url, await qrSvg(url)] as const)),
+  );
+
   return (
     <SlideFrame
       no={no}
@@ -16,17 +29,7 @@ export default function EvidenceSlide({ p, no, total }: { p: AxProject; no: numb
         </>
       }
     >
-      <EvidenceFigures items={p.evidence} />
-
-      {/* 인쇄 시: 영상 자리는 포스터 컷으로 대체 */}
-      {video && video.kind === "video" && (
-        <div className="ax-print-only ax-fig" style={{ flex: 1, marginTop: "1.1em" }}>
-          <div className="ax-figbox">
-            <img src={asset(video.poster)} alt="시연 영상 대표 컷" />
-          </div>
-          <p className="ax-figcap">{video.caption} — 재생은 웹에서 가능합니다</p>
-        </div>
-      )}
+      <EvidenceFigures items={p.evidence} qrSvgs={qrSvgs} />
 
       <div className="ax-chips ax-mono">
         <span className="ax-web-only">{"// 이미지를 클릭하면 원본 크기로 열립니다"}</span>

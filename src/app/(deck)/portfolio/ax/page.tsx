@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { Metadata } from "next";
 import "./ax.css";
 import { axProjects, deckMeta } from "@/data/ax";
@@ -28,11 +29,12 @@ export default function AxDeckPage() {
       {axProjects.map((p) => {
         const overviewNo = next();
         const evidenceNo = next();
+        // Fragment로 감싼다 — 래퍼 엘리먼트를 두면 인쇄 CSS의 :last-child 판정이 어긋난다
         return (
-          <div key={p.code} style={{ display: "contents" }}>
+          <Fragment key={p.code}>
             <OverviewSlide p={p} no={overviewNo} total={total} />
             <EvidenceSlide p={p} no={evidenceNo} total={total} />
-          </div>
+          </Fragment>
         );
       })}
       <ClosingSlide no={next()} total={total} />

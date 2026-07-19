@@ -10,7 +10,10 @@ html:has(.ax-deck) {
   color: var(--ink);
 }
 
-.ax-mono { font-family: ui-monospace, Menlo, Consolas, monospace; }
+/* 한글은 Consolas·Menlo에 없다. Pretendard를 폴백으로 끼워 두지 않으면
+   한글 글리프가 시스템 폰트 운에 맡겨지고, 한글 폰트가 없는 환경(인쇄 서버 등)에서는
+   PDF에 두부(□)로 찍힌다. 라틴 문자는 그대로 고정폭을 유지한다. */
+.ax-mono { font-family: ui-monospace, Menlo, Consolas, var(--font-pretendard), monospace; }
 .ax-acc { color: var(--accent); }
 .ax-mut { color: var(--muted); }
 .ax-fnt { color: var(--faint); }
@@ -36,6 +39,8 @@ html:has(.ax-deck) {
 
 .ax-ebrow {
   display: flex;
+  /* .ax-center의 align-items:center에 눌려 폭이 줄면 라벨과 쪽번호가 맞붙는다 */
+  align-self: stretch;
   justify-content: space-between;
   align-items: baseline;
   font-size: 0.65em;
@@ -59,7 +64,7 @@ html:has(.ax-deck) {
 
 /* ── 본문 2컬럼 + 로그 레일 ── */
 .ax-cols { display: flex; gap: 2.2em; flex: 1; margin-top: 1.2em; min-height: 0; }
-.ax-col { flex: 1.35; border-top: 1px solid var(--ink); padding-top: 0.75em; }
+.ax-col { flex: 1.35; border-top: 1px solid var(--ink); padding-top: 0.75em; display: flex; flex-direction: column; }
 .ax-h {
   font-size: 0.62em;
   font-weight: 700;
@@ -69,6 +74,8 @@ html:has(.ax-deck) {
 .ax-works { margin-top: 0.6em; font-size: 0.75em; line-height: 1.65; list-style: none; padding: 0; }
 .ax-works li + li { margin-top: 0.55em; }
 .ax-results { font-size: 0.75em; margin-top: 0.5em; }
+/* 결과는 컬럼 바닥에 붙인다 — 남는 공간이 '빈 자리'가 아니라 역할/결과 사이의 간격이 된다 */
+.ax-h-results { margin-top: auto; padding-top: 1.1em; }
 
 .ax-log {
   width: 33%;
@@ -97,7 +104,8 @@ html:has(.ax-deck) {
 }
 
 /* ── 역량 맵 매트릭스 ── */
-.ax-matrix { width: 100%; border-collapse: collapse; font-size: 0.7em; margin-top: 1.2em; }
+/* flex:1 — 표가 슬라이드 높이를 채우도록 행을 늘린다 (아래가 텅 비지 않게) */
+.ax-matrix { width: 100%; border-collapse: collapse; font-size: 0.7em; margin-top: 1.2em; flex: 1; }
 .ax-matrix th, .ax-matrix td {
   border-bottom: 1px solid var(--hairline);
   padding: 0.55em 0.8em;
@@ -117,10 +125,15 @@ html:has(.ax-deck) {
 }
 .ax-center { align-items: center; text-align: center; justify-content: center; }
 
-/* ── 인쇄/화면 전환 ── */
-.ax-print-only { display: none; }
+/* ── 인쇄/화면 전환 ──
+   !important가 필요하다: .ax-print-only는 .ax-fig / .ax-printfig 같은
+   display를 가진 클래스와 특정도가 같아서, 순서만으로는 화면에서 새어 나온다. */
+.ax-print-only { display: none !important; }
 
-@media (orientation: portrait), (max-width: 700px) {
+/* 세로 화면에서는 슬라이드를 세로로 푼다.
+   `screen and`가 반드시 필요하다 — 인쇄 시 브라우저는 orientation을 기본 용지(A4 세로)로
+   판정해서, 이 블록이 그대로 걸리면 PDF가 모바일 레이아웃으로 찍히고 페이지가 넘친다. */
+@media screen and (orientation: portrait), screen and (max-width: 700px) {
   html:has(.ax-deck) { scroll-snap-type: none; }
   .ax-viewport { min-height: 0; padding: 1.5rem 0; }
   .ax-slide {
@@ -149,12 +162,66 @@ html:has(.ax-deck) {
 }
 .ax-figbox img, .ax-figbox video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ax-figbox video { object-fit: contain; background: #000; }
+.ax-figbox.ax-fit img { object-fit: contain; }
 .ax-figcap { font-size: 0.62em; margin-top: 0.5em; color: var(--muted); }
 .ax-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4em; flex: 1; min-height: 0; }
 .ax-grid2 > * { border: 1px solid var(--hairline); overflow: hidden; cursor: zoom-in; padding: 0; background: #fff; }
 .ax-grid2 img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ax-more { display: flex; align-items: center; justify-content: center; font-size: 0.8em; color: var(--muted); }
 .ax-notebox { border: 1px solid var(--hairline); padding: 0.9em 1em; font-size: 0.68em; line-height: 1.9; }
+/* 배포된 서비스 자체가 증빙일 때 — QR 줄 목록 */
+.ax-links { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 0.5em; }
+.ax-linkrow {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--hairline);
+  background: #fff;
+  padding: 0.7em 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  color: inherit;
+  text-decoration: none;
+}
+.ax-linkrow:hover { border-color: var(--accent); }
+.ax-linkrow .ax-qr { width: 3.4em; height: 3.4em; margin: 0; flex: 0 0 auto; }
+.ax-linkbody { display: flex; flex-direction: column; gap: 0.2em; min-width: 0; }
+.ax-linklabel { font-size: 0.7em; font-weight: 700; }
+.ax-linkurl { font-size: 0.58em; color: var(--accent); word-break: break-all; }
+.ax-linknote { font-size: 0.58em; line-height: 1.5; }
+
+/* 에이전트 한 턴의 흐름 — 화면에 담기지 않는 동작을 세로 레일로 보여준다 */
+.ax-flow {
+  flex: 1;
+  min-height: 0;
+  border: 1px solid var(--hairline);
+  background: #fff;
+  padding: 1em 1.1em;
+  display: flex;
+  flex-direction: column;
+}
+.ax-flow-title { font-size: 0.72em; line-height: 1.5; }
+.ax-flow-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0.7em 0 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.ax-flow-steps li {
+  display: flex;
+  gap: 0.8em;
+  font-size: 0.64em;
+  line-height: 1.55;
+  padding: 0.5em 0;
+  border-top: 1px solid var(--hairline);
+}
+.ax-flow-steps li:first-child { border-top: none; padding-top: 0; }
+/* 행위 주체를 고정폭 열로 세워, 어느 줄에서 주도권이 넘어가는지 눈으로 읽히게 한다 */
+.ax-flow-actor { flex: 0 0 4.2em; color: var(--accent); }
+.ax-flow-text { color: var(--muted); }
 
 /* ── 라이트박스 ── */
 .ax-lightbox {
@@ -188,14 +255,18 @@ html:has(.ax-deck) {
 }
 .ax-dot[aria-current="true"] { background: var(--accent); border-color: var(--accent); }
 .ax-chrome-count { font-size: 11px; color: var(--faint); }
+/* 우하단 — 슬라이드 우상단의 쪽번호와 겹치지 않는 자리 */
+.ax-pdf { position: fixed; right: 18px; bottom: 18px; z-index: 40; text-align: right; }
 .ax-pdf-btn {
-  position: fixed; right: 18px; top: 18px; z-index: 40;
   border: 1px solid var(--hairline); background: var(--paper); color: var(--muted);
   font-size: 12px; padding: 6px 12px; cursor: pointer;
 }
 .ax-pdf-btn:hover { color: var(--ink); border-color: var(--ink); }
-@media (orientation: portrait), (max-width: 700px) {
+.ax-pdf-hint { margin-top: 5px; font-size: 10px; color: var(--faint); }
+@media screen and (orientation: portrait), screen and (max-width: 700px) {
   .ax-chrome { display: none; }
+  /* 좁은 화면에서는 힌트가 슬라이드 위에 겹친다 — 인쇄는 데스크톱에서 한다 */
+  .ax-pdf-hint { display: none; }
 }
 /* 부팅 로그 타이핑: 줄 단위 표시 */
 .ax-bootline { visibility: hidden; }
@@ -211,21 +282,47 @@ html:has(.ax-deck) {
 .ax-qr-lg { width: 9em; height: 9em; }
 .ax-qr-sm { width: 4.5em; height: 4.5em; margin-top: 1.2em; }
 
+/* ── 인쇄: 용지 자체를 16:9로 잡는다 ──
+   A4에 얹으면 위아래에 빈 띠가 남으므로, 용지 크기를 슬라이드 비율(297×167mm)에
+   맞춘다. 용지와 슬라이드 치수가 정확히 같아야 빈 페이지가 끼지 않는다.
+   @page에 이름을 붙여야 globals.css의 `@page { size: A4 portrait; margin: 12mm }`와
+   섞이지 않는다 (이름 없는 @page는 두 파일이 하나로 합쳐진다). */
+@page ax {
+  size: 297mm 167mm;
+  margin: 0;
+}
+
 @media print {
-  @page { size: A4 landscape; margin: 0; }
   html:has(.ax-deck) { scroll-snap-type: none; }
-  .ax-deck { background: #fff; }
-  .ax-viewport { min-height: 0; display: block; }
+  .ax-deck {
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .ax-viewport {
+    page: ax;
+    min-height: 0;
+    display: block;
+    overflow: hidden;
+  }
   .ax-slide {
-    width: 297mm;
-    height: 209mm;
+    /* 용지(297×167mm)보다 아주 조금 작게 — mm→pt 반올림으로 0.1mm만 넘쳐도
+       슬라이드마다 빈 페이지가 한 장씩 따라붙는다 */
+    width: 296mm;
+    height: 166mm;
     aspect-ratio: auto;
-    font-size: 4.9mm;
+    font-size: 4.93mm; /* 화면과 같은 규칙 — 슬라이드 너비 / 60 */
+    overflow: hidden; /* 넘친 내용이 페이지를 하나 더 만들지 않도록 */
+    break-inside: avoid;
     break-after: page;
   }
+  /* 마지막 슬라이드의 break-after는 빈 페이지를 한 장 더 만든다 */
+  .ax-deck > .ax-viewport:last-child .ax-slide { break-after: auto; }
+
   .ax-web-only { display: none !important; }
   .ax-print-only { display: flex !important; }
-  .ax-notice { display: flex !important; }
+  .ax-viewport.ax-print-only { display: block !important; }
+  .ax-figbox.ax-print-only { display: block !important; }
   .ax-chips .ax-print-only { display: inline !important; }
   .ax-figbox, .ax-grid2 > * { cursor: default; }
   .ax-bootline { visibility: visible; }

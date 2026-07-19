@@ -4,8 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { EvidenceItem } from "@/data/ax";
 import { asset } from "@/lib/paths";
 
-/* 증빙 자료 그리드 + 클릭 확대(라이트박스). 웹 전용 — 인쇄 대체는 EvidenceSlide가 담당 */
-export default function EvidenceFigures({ items }: { items: EvidenceItem[] }) {
+/* 증빙 자료 그리드 + 클릭 확대(라이트박스). 인쇄 대체는 EvidenceSlide가 담당.
+   qrSvgs: link 증빙의 QR을 서버에서 미리 그려 넘겨받는다(클라이언트에서 생성하지 않음) */
+export default function EvidenceFigures({
+  items,
+  qrSvgs = {},
+}: {
+  items: EvidenceItem[];
+  qrSvgs?: Record<string, string>;
+}) {
   // 라이트박스에서 넘겨볼 수 있는 이미지의 평탄화 목록
   const zoomable = items.flatMap((item, fi) =>
     item.kind === "image"
@@ -81,11 +88,11 @@ export default function EvidenceFigures({ items }: { items: EvidenceItem[] }) {
               <figure key={item.src} className="ax-fig">
                 <button
                   type="button"
-                  className="ax-figbox"
+                  className={`ax-figbox ${item.fit === "contain" ? "ax-fit" : ""}`}
                   aria-label={`${item.alt} 크게 보기`}
                   onClick={() => setOpen(zoomIndex(item.src))}
                 >
-                  <img src={asset(item.src)} alt={item.alt} loading="lazy" />
+                  <img src={asset(item.src)} alt={item.alt} />
                 </button>
                 {cap}
               </figure>
@@ -104,7 +111,7 @@ export default function EvidenceFigures({ items }: { items: EvidenceItem[] }) {
                       aria-label={`${img.alt} 크게 보기`}
                       onClick={() => setOpen(zoomIndex(img.src))}
                     >
-                      <img src={asset(img.src)} alt={img.alt} loading="lazy" />
+                      <img src={asset(img.src)} alt={img.alt} />
                     </button>
                   ))}
                   {rest > 0 && (
@@ -125,9 +132,63 @@ export default function EvidenceFigures({ items }: { items: EvidenceItem[] }) {
 
           if (item.kind === "video")
             return (
-              <figure key={item.src} className="ax-fig ax-web-only" style={{ flex: 1.6 }}>
-                <div className="ax-figbox" style={{ cursor: "default" }}>
+              <figure key={item.src} className="ax-fig" style={{ flex: 1.6 }}>
+                <div className="ax-figbox ax-web-only" style={{ cursor: "default" }}>
                   <video controls preload="metadata" poster={asset(item.poster)} src={asset(item.src)} />
+                </div>
+                {/* 인쇄본에서는 재생할 수 없으므로 같은 자리를 포스터 컷이 대신한다 */}
+                <div className="ax-figbox ax-print-only">
+                  <img src={asset(item.poster)} alt="시연 영상 대표 컷" />
+                </div>
+                {cap}
+              </figure>
+            );
+
+          if (item.kind === "flow")
+            return (
+              <figure key={item.title} className="ax-fig" style={{ flex: 1.5 }}>
+                <div className="ax-flow">
+                  <strong className="ax-flow-title">{item.title}</strong>
+                  <ol className="ax-flow-steps">
+                    {item.steps.map((s) => (
+                      <li key={s.actor + s.text}>
+                        <span className="ax-mono ax-flow-actor">{s.actor}</span>
+                        <span className="ax-flow-text">{s.text}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+                {cap}
+              </figure>
+            );
+
+          if (item.kind === "links")
+            return (
+              <figure key={item.caption} className="ax-fig">
+                <div className="ax-links">
+                  {item.items.map((l) => (
+                    <a
+                      key={l.url}
+                      className="ax-linkrow"
+                      href={l.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`${l.label} 열기 — ${l.url}`}
+                    >
+                      <span
+                        className="ax-qr"
+                        aria-hidden="true"
+                        dangerouslySetInnerHTML={{ __html: qrSvgs[l.url] ?? "" }}
+                      />
+                      <span className="ax-linkbody">
+                        <span className="ax-linklabel">{l.label}</span>
+                        <span className="ax-mono ax-linkurl">
+                          {l.url.replace(/^https?:\/\//, "")}
+                        </span>
+                        <span className="ax-mut ax-linknote">{l.note}</span>
+                      </span>
+                    </a>
+                  ))}
                 </div>
                 {cap}
               </figure>

@@ -106,14 +106,17 @@ export default function PortfolioPage() {
       >
         <span>
           <span className="block text-[11px] font-bold tracking-[0.14em] text-accent">
-            SPECIAL — AX DECK
+            AI AGENT / FULL-STACK AX
           </span>
           <span className="mt-1 block text-[16px] font-extrabold tracking-tight">
             AI Agent / Full-stack AX 포트폴리오
           </span>
+          <span className="mt-1 block text-[12.5px] text-muted">
+            데이터바우처 · 3D 역설계 · AI 쇼핑 어시스턴트 — 데이터 생성부터 배포까지
+          </span>
         </span>
         <span className="shrink-0 text-[12.5px] font-semibold text-muted group-hover:text-ink">
-          가로 화면 덱으로 보기 →
+          가로 화면으로 보기 →
         </span>
       </Link>
 

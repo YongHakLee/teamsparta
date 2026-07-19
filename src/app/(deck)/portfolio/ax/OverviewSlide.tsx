@@ -27,7 +27,7 @@ export default function OverviewSlide({ p, no, total }: { p: AxProject; no: numb
               </li>
             ))}
           </ul>
-          <h3 className="ax-h" style={{ marginTop: "1.1em" }}>프로젝트 결과</h3>
+          <h3 className="ax-h ax-h-results">프로젝트 결과</h3>
           <p className="ax-results">
             {p.results.map((r, i) => (
               <span key={r}>
