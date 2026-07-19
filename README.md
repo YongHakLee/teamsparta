@@ -9,7 +9,7 @@ https://yonghaklee.github.io/teamsparta/
 
 ### AI Agent / Full-stack AX 포트폴리오를 PDF로 저장하기
 
-덱 우하단 **PDF 저장** 버튼(또는 `Ctrl/⌘ + P`)을 누르고, 인쇄 대화상자에서:
+덱을 연 상태에서 `Ctrl/⌘ + P`를 누르고, 인쇄 대화상자에서:
 
 - **대상** — PDF로 저장
 - **여백** — 없음

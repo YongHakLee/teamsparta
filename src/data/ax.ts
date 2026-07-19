@@ -252,11 +252,6 @@ export const axProjects: AxProject[] = [
             url: "https://github.com/YongHakLee/sparta-project",
             note: "에이전트 루프 · 인자 검증 · Vitest 42개",
           },
-          {
-            label: "API",
-            url: "https://sparta-api.vercel.app/api/products",
-            note: "Express 5 · Prisma — 웹과 분리 배포",
-          },
         ],
         caption: "QR로 지금 열어서 직접 대화해 볼 수 있습니다",
       },

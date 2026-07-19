@@ -57,6 +57,7 @@ const checks = [
   ["AX 덱: PDF 안내장", axDeck.includes("웹에서 보시길 권장")],
   ["AX 덱: QR 포함", axDeck.includes('class="ax-qr')],
   ["포트폴리오→AX 덱 배너", portfolio.includes('href="/teamsparta/portfolio/ax"')],
+  ["헤더에 AX 덱 링크", resume.includes('href="/teamsparta/portfolio/ax"') && resume.includes("AX 포트폴리오")],
 ];
 
 let failed = 0;

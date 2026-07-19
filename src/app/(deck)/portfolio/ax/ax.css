@@ -184,7 +184,17 @@ html:has(.ax-deck) {
   text-decoration: none;
 }
 .ax-linkrow:hover { border-color: var(--accent); }
-.ax-linkrow .ax-qr { width: 3.4em; height: 3.4em; margin: 0; flex: 0 0 auto; }
+/* 줄 높이에 맞춰 QR이 자란다 — 링크 개수가 바뀌어도 카드가 비지 않는다 */
+.ax-linkrow .ax-qr {
+  align-self: stretch;
+  width: auto;
+  height: auto;
+  aspect-ratio: 1;
+  margin: 0;
+  flex: 0 0 auto;
+  min-width: 3.2em;
+  max-width: 30%;
+}
 .ax-linkbody { display: flex; flex-direction: column; gap: 0.2em; min-width: 0; }
 .ax-linklabel { font-size: 0.7em; font-weight: 700; }
 .ax-linkurl { font-size: 0.58em; color: var(--accent); word-break: break-all; }
@@ -255,18 +265,8 @@ html:has(.ax-deck) {
 }
 .ax-dot[aria-current="true"] { background: var(--accent); border-color: var(--accent); }
 .ax-chrome-count { font-size: 11px; color: var(--faint); }
-/* 우하단 — 슬라이드 우상단의 쪽번호와 겹치지 않는 자리 */
-.ax-pdf { position: fixed; right: 18px; bottom: 18px; z-index: 40; text-align: right; }
-.ax-pdf-btn {
-  border: 1px solid var(--hairline); background: var(--paper); color: var(--muted);
-  font-size: 12px; padding: 6px 12px; cursor: pointer;
-}
-.ax-pdf-btn:hover { color: var(--ink); border-color: var(--ink); }
-.ax-pdf-hint { margin-top: 5px; font-size: 10px; color: var(--faint); }
 @media screen and (orientation: portrait), screen and (max-width: 700px) {
   .ax-chrome { display: none; }
-  /* 좁은 화면에서는 힌트가 슬라이드 위에 겹친다 — 인쇄는 데스크톱에서 한다 */
-  .ax-pdf-hint { display: none; }
 }
 /* 부팅 로그 타이핑: 줄 단위 표시 */
 .ax-bootline { visibility: hidden; }

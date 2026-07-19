@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-/* 우측 점 내비 + 현재 장 표시 + PDF 저장 버튼. 인쇄 시 숨김(ax-web-only) */
+/* 우측 점 내비 + 현재 장 표시. 인쇄 시 숨김(ax-web-only) */
 export default function DeckChrome({ total }: { total: number }) {
   const [current, setCurrent] = useState(1);
 
@@ -22,12 +22,6 @@ export default function DeckChrome({ total }: { total: number }) {
 
   return (
     <div className="ax-web-only">
-      <div className="ax-pdf">
-        <button type="button" className="ax-pdf-btn ax-mono" onClick={() => window.print()}>
-          PDF 저장
-        </button>
-        <p className="ax-pdf-hint">여백 없음 · 배경 그래픽 켜기</p>
-      </div>
       <nav className="ax-chrome" aria-label="슬라이드 이동">
         <span className="ax-chrome-count ax-mono">
           {String(current).padStart(2, "0")} / {String(total).padStart(2, "0")}
