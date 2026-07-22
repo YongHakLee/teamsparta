@@ -35,3 +35,44 @@ export function nextTokenCandidates(prefix: string, temperature: number): TokenC
   if (!base) return []; // 종료
   return applyTemperature(base, temperature);
 }
+
+/* ── PromptPattern (s05–s06) ── */
+export type PatternKey = "zero" | "few" | "cot" | "structured";
+export type PatternSample = { key: PatternKey; label: string; prompt: string; output: string[]; structured?: boolean };
+
+export const promptPatterns: PatternSample[] = [
+  {
+    key: "zero", label: "Zero-shot",
+    prompt: "다음 리뷰의 감성을 분류해줘.\n리뷰: \"배송은 빨랐지만 품질이 별로였다\"",
+    output: ["부정"],
+  },
+  {
+    key: "few", label: "Few-shot",
+    prompt: "예시)\n\"최고예요\" → 긍정\n\"다신 안 사요\" → 부정\n\n리뷰: \"배송은 빨랐지만 품질이 별로였다\" →",
+    output: ["부정"],
+  },
+  {
+    key: "cot", label: "CoT",
+    prompt: "다음 리뷰를 단계적으로 생각해서 분류해줘.\n리뷰: \"배송은 빨랐지만 품질이 별로였다\"",
+    output: [
+      "1) 배송: 빠름 → 긍정 신호",
+      "2) 품질: 별로 → 부정 신호",
+      "3) 핵심은 제품 품질 → 종합 부정",
+      "결론: 부정",
+    ],
+  },
+  {
+    key: "structured", label: "구조화 출력", structured: true,
+    prompt: "리뷰를 분류하고 JSON으로만 답해줘. 스키마: {sentiment, confidence, aspects[]}",
+    output: [
+      "{",
+      '  "sentiment": "negative",',
+      '  "confidence": 0.82,',
+      '  "aspects": [',
+      '    { "name": "배송", "polarity": "positive" },',
+      '    { "name": "품질", "polarity": "negative" }',
+      "  ]",
+      "}",
+    ],
+  },
+];

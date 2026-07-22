@@ -1,5 +1,6 @@
 import type { Slide } from "@/data/lecture";
 import NextTokenDemo from "./demos/NextTokenDemo";
+import PromptPatternDemo from "./demos/PromptPatternDemo";
 
 /* activeStep: 0이면 아무 fragment도 안 열림, n이면 data-frag<=n 까지 열림 */
 export default function SlideBody({ slide, activeStep }: { slide: Slide; activeStep: number }) {
@@ -30,6 +31,7 @@ export default function SlideBody({ slide, activeStep }: { slide: Slide; activeS
       )}
       {/* 데모 슬롯: slide.demo 별 컴포넌트 연결 */}
       {slide.demo === "nextToken" && <NextTokenDemo />}
+      {slide.demo === "promptPattern" && <PromptPatternDemo />}
     </>
   );
 }
