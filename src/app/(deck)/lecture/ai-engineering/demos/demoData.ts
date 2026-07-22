@@ -76,3 +76,25 @@ export const promptPatterns: PatternSample[] = [
     ],
   },
 ];
+
+/* ── RagPipeline (s08) ── */
+export type RagChunk = { id: string; text: string; score: number };
+export type RagCase = {
+  question: string;
+  chunks: RagChunk[];
+  groundedAnswer: string;
+  ungroundedAnswer: string;
+};
+
+export const RAG_STAGES = ["질문", "임베딩", "검색", "증강", "생성"] as const;
+
+export const ragCase: RagCase = {
+  question: "우리 회사 환불 정책은 며칠까지 가능해?",
+  chunks: [
+    { id: "policy-04", text: "환불은 구매일로부터 14일 이내 미개봉 상품에 한해 가능하다.", score: 0.94 },
+    { id: "policy-07", text: "단순 변심 환불 시 왕복 배송비는 고객이 부담한다.", score: 0.71 },
+    { id: "faq-12", text: "교환은 상품 수령 후 7일 이내 신청할 수 있다.", score: 0.38 },
+  ],
+  groundedAnswer: "환불은 구매일로부터 14일 이내, 미개봉 상품에 한해 가능합니다. (근거: policy-04)",
+  ungroundedAnswer: "보통 30일 정도면 환불되는 경우가 많습니다. (근거 없음 — 실제 정책과 다를 수 있음)",
+};
