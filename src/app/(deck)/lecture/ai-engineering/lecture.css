@@ -121,3 +121,23 @@
 .lec-note-block p { font-size: 15px; line-height: 1.65; margin-top: 6px; }
 .lec-speaker-ctrl { display: flex; gap: 10px; justify-content: flex-end; }
 .lec-speaker-ctrl button { border: 1px solid var(--ink); background: #fff; padding: 8px 16px; cursor: pointer; font-size: 14px; }
+
+/* ── 데모 공통 ── */
+.lec-demo { margin-top: 1.1em; border: 1px solid var(--hairline); background: #fff; padding: 1em 1.2em; font-size: 0.8em; }
+
+/* NextToken */
+.lec-nt-sentence { font-size: 1.4em; min-height: 1.6em; display: flex; align-items: center; }
+.lec-nt-caret { display: inline-block; width: 0.5em; height: 1.1em; background: var(--accent); margin-left: 2px; animation: lec-blink 1s steps(1) infinite; }
+@keyframes lec-blink { 50% { opacity: 0; } }
+.lec-nt-controls { display: flex; gap: 1.2em; align-items: center; margin: 0.8em 0; font-size: 0.8em; color: var(--muted); }
+.lec-nt-controls input[type=range] { accent-color: var(--accent); }
+.lec-nt-controls button { border: 1px solid var(--hairline); background: var(--paper); padding: 3px 10px; cursor: pointer; }
+.lec-nt-cands { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.lec-nt-cands button { display: flex; align-items: center; gap: 10px; width: 100%; border: 1px solid var(--hairline); background: var(--paper); padding: 6px 10px; cursor: pointer; text-align: left; }
+.lec-nt-cands button:hover { border-color: var(--accent); }
+.lec-nt-tok { flex: 0 0 30%; font-weight: 700; }
+.lec-nt-bar { flex: 1; height: 8px; background: var(--hairline); }
+.lec-nt-bar span { display: block; height: 100%; background: var(--accent); }
+.lec-nt-prob { flex: 0 0 3em; text-align: right; color: var(--muted); }
+.lec-nt-done { margin-top: 0.5em; }
+@media (prefers-reduced-motion: reduce) { .lec-nt-caret { animation: none; } }
