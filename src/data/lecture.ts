@@ -24,7 +24,7 @@ export const deckMeta = {
   title: "AI 리터러시 · RAG · LLMOps",
   subtitle: "AI 서비스를 설계 → 연결 → 운영하는 세 축",
   author: "이용학",
-  // 발표자 창 암호의 SHA-256 해시(HEX, 소문자). 임시값("test1234")—Task 5에서 강의자 지정값으로 교체.
+  // 발표자 창 암호의 SHA-256 해시(HEX, 소문자). 현재는 임시 검증용 값 — Task 5에서 강의자 지정값의 해시로 교체.
   presenterPassHash: "937e8d5fbb48bd4949536cd65b8d35c426b80d2f830c5c308e2cdec422ae2244",
 };
 

@@ -47,6 +47,7 @@ export default function LectureDeck({ slides, parts }: { slides: SlideT[]; parts
   }, []);
 
   useEffect(() => {
+    if (present) return; // 발표자 창에서는 덱 키보드 핸들러를 붙이지 않는다
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); advance(); }
       else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); back(); }
@@ -56,7 +57,7 @@ export default function LectureDeck({ slides, parts }: { slides: SlideT[]; parts
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [advance, back, go, total, slides, openSpeaker]);
+  }, [present, advance, back, go, total, slides, openSpeaker]);
 
   if (present) return <SpeakerView slides={slides} parts={parts} />;
 
