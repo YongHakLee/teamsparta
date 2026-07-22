@@ -186,3 +186,17 @@
 .lec-ops-outcome { display: flex; gap: 16px; margin-top: 8px; font-size: 0.85em; }
 .lec-ops-outcome.danger { color: var(--accent); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .lec-ops-bar span { transition: none; } }
+
+/* ── 조작 힌트 / 좁은 화면 안내 ── */
+.lec-hint { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 30; font-size: 12px; color: var(--faint); background: var(--paper); padding: 4px 10px; border: 1px solid var(--hairline); animation: lec-fade 0.4s ease 5s forwards; }
+@keyframes lec-fade { to { opacity: 0; visibility: hidden; } }
+
+.lec-portrait-note { display: none; }
+@media (max-aspect-ratio: 1/1), (max-width: 720px) {
+  .lec-slide { font-size: clamp(12px, 3.4vw, 18px); width: 96vw; height: auto; aspect-ratio: auto; min-height: 70dvh; }
+  .lec-portrait-note { display: flex; align-items: center; justify-content: center; text-align: center; position: fixed; inset: 0; z-index: 60; background: var(--paper); color: var(--ink); padding: 8vw; font-size: 16px; line-height: 1.7; }
+  .lec-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lec-hint { animation: none; }
+}
