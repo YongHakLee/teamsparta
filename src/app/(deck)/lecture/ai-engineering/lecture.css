@@ -1,0 +1,95 @@
+/* 강의 덱 전용. 색은 globals.css 토큰을 재사용, 스케일만 강의용으로 크게. */
+
+.lec-deck {
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+}
+
+.lec-mono { font-family: ui-monospace, Menlo, Consolas, var(--font-pretendard), monospace; }
+.lec-acc { color: var(--accent); }
+.lec-mut { color: var(--muted); }
+
+/* 슬라이드 스테이지: 한 번에 한 장만 보인다 */
+.lec-stage {
+  position: relative;
+  width: 100dvw;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+.lec-viewport {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(2%);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+.lec-viewport.lec-active {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+}
+.lec-viewport.lec-past { transform: translateX(-2%); }
+
+.lec-slide {
+  width: min(94vw, calc(94dvh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  /* 강의용 큰 스케일: 짧은 변 / 46 (AX는 /60) */
+  font-size: calc(min(94vw, 94dvh * 16 / 9) / 46);
+  padding: 2.2em 2.8em;
+  display: flex;
+  flex-direction: column;
+}
+
+.lec-ebrow {
+  display: flex;
+  align-self: stretch;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.62em;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+}
+
+.lec-title {
+  font-size: 1.9em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 0.5em;
+}
+.lec-cover .lec-title { font-size: 2.8em; }
+
+.lec-body { margin-top: 1em; font-size: 0.9em; line-height: 1.7; list-style: none; padding: 0; }
+.lec-body li { margin-top: 0.6em; }
+
+/* 빌드 fragment: activeStep 이하만 보인다 */
+.lec-frag {
+  opacity: 0;
+  transform: translateY(0.4em);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.lec-frag.lec-frag-on { opacity: 1; transform: none; }
+
+.lec-cover { align-items: flex-start; justify-content: center; }
+.lec-center { align-items: center; text-align: center; justify-content: center; }
+
+/* 세로/좁은 화면: 발표 덱은 가로 전제 — 안내 배너 노출(Task 8에서 강화) */
+@media (prefers-reduced-motion: reduce) {
+  .lec-viewport { transition: none; }
+  .lec-frag { transition: none; }
+}
+
+.lec-progress { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 0 16px 8px; pointer-events: none; }
+.lec-progress-bar { height: 2px; background: var(--hairline); }
+.lec-progress-bar span { display: block; height: 100%; background: var(--accent); transition: width 0.4s ease; }
+.lec-progress-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-top: 6px; }
