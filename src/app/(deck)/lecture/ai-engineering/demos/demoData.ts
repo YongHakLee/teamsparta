@@ -98,3 +98,21 @@ export const ragCase: RagCase = {
   groundedAnswer: "환불은 구매일로부터 14일 이내, 미개봉 상품에 한해 가능합니다. (근거: policy-04)",
   ungroundedAnswer: "보통 30일 정도면 환불되는 경우가 많습니다. (근거 없음 — 실제 정책과 다를 수 있음)",
 };
+
+/* ── LlmOpsDashboard (s10–s11) ── */
+export type Metric = { label: string; value: string; spark: number[] };
+
+export const opsMetrics: Metric[] = [
+  { label: "지연 p95", value: "1.8s", spark: [1.4, 1.6, 1.5, 1.9, 1.7, 1.8] },
+  { label: "요청당 비용", value: "$0.012", spark: [0.010, 0.011, 0.012, 0.012, 0.013, 0.012] },
+  { label: "평균 토큰", value: "1,240", spark: [1100, 1180, 1200, 1260, 1230, 1240] },
+  { label: "품질 점수", value: "92", spark: [90, 91, 89, 92, 93, 92] },
+];
+
+/* 신버전 비율이 높아질수록(불량 신버전 가정) 에러율↑·품질↓. 40%↑에서 위험. */
+export function canaryOutcome(canaryPct: number): { errorRate: number; quality: number; danger: boolean } {
+  const p = Math.max(0, Math.min(100, canaryPct)) / 100;
+  const errorRate = +(0.5 + p * p * 11).toFixed(1); // 0.5% → 최대 ~11.5%
+  const quality = Math.round(92 - p * 22);           // 92 → 70
+  return { errorRate, quality, danger: errorRate > 3 };
+}
