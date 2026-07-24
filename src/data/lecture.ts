@@ -148,7 +148,7 @@ export const slides: Slide[] = [
   {
     id: "s12",
     partId: "p3",
-    eyebrow: "PART 3 · 자동 평가(evals)",
+    eyebrow: "PART 3 · 자동 평가",
     kind: "content",
     steps: 3,
     title: "자동 평가(Evals)로 회귀를 막는다",
