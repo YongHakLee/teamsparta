@@ -2,7 +2,8 @@ import type { Slide } from "@/data/lecture";
 import NextTokenDemo from "./demos/NextTokenDemo";
 import PromptPatternDemo from "./demos/PromptPatternDemo";
 import RagPipelineDemo from "./demos/RagPipelineDemo";
-import LlmOpsDashboardDemo from "./demos/LlmOpsDashboardDemo";
+import LlmOpsMetricsDemo from "./demos/LlmOpsMetricsDemo";
+import LlmOpsCanaryDemo from "./demos/LlmOpsCanaryDemo";
 import SearchQualityTable from "./demos/SearchQualityTable";
 
 /* activeStep: 0이면 아무 fragment도 안 열림, n이면 data-frag<=n 까지 열림 */
@@ -38,8 +39,9 @@ export default function SlideBody({ slide, activeStep }: { slide: Slide; activeS
         <PromptPatternDemo variant={slide.id === "s06" ? "structured" : "patterns"} />
       )}
       {slide.demo === "ragPipeline" && <RagPipelineDemo activeStep={activeStep} />}
-      {slide.demo === "llmOps" && <LlmOpsDashboardDemo />}
       {slide.demo === "searchQuality" && <SearchQualityTable />}
+      {slide.demo === "llmOpsMetrics" && <LlmOpsMetricsDemo />}
+      {slide.demo === "llmOpsCanary" && <LlmOpsCanaryDemo />}
     </>
   );
 }

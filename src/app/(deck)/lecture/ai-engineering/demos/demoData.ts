@@ -102,15 +102,17 @@ export const searchQualityRows: KnobRow[] = [
   { knob: "리랭킹", en: "reranking", bad: "벡터 검색 상위가 부정확할 때 그대로 사용", good: "관련도 재점수화로 진짜 관련 문서를 위로" },
 ];
 
-/* ── LlmOpsDashboard (s10–s11) ── */
-export type Metric = { label: string; value: string; spark: number[] };
+/* ── LlmOpsMetrics (s10) / LlmOpsCanary (s11) ── */
+export type Metric = { label: string; value: string; spark: number[]; desc: string };
 
 export const opsMetrics: Metric[] = [
-  { label: "지연 p95", value: "1.8s", spark: [1.4, 1.6, 1.5, 1.9, 1.7, 1.8] },
-  { label: "요청당 비용", value: "$0.012", spark: [0.010, 0.011, 0.012, 0.012, 0.013, 0.012] },
-  { label: "평균 토큰", value: "1,240", spark: [1100, 1180, 1200, 1260, 1230, 1240] },
-  { label: "품질 점수", value: "92", spark: [90, 91, 89, 92, 93, 92] },
+  { label: "지연(latency) p95", value: "1.8s", spark: [1.4, 1.6, 1.5, 1.9, 1.7, 1.8], desc: "상위 5% 느린 요청 기준선. 평균이 가리는 최악 경험을 본다." },
+  { label: "요청당 비용", value: "$0.012", spark: [0.010, 0.011, 0.012, 0.012, 0.013, 0.012], desc: "비용은 토큰 수에 비례한다." },
+  { label: "평균 토큰(token)", value: "1,240", spark: [1100, 1180, 1200, 1260, 1230, 1240], desc: "입력+출력 토큰. 곧 비용." },
+  { label: "품질 점수", value: "92", spark: [90, 91, 89, 92, 93, 92], desc: "사람/자동 평가로 수치화한 답의 유용성." },
 ];
+
+export const canarySteps = [5, 25, 50, 100] as const;
 
 /* 신버전 비율이 높아질수록(불량 신버전 가정) 에러율↑·품질↓. 40%↑에서 위험. */
 export function canaryOutcome(canaryPct: number): { errorRate: number; quality: number; danger: boolean } {

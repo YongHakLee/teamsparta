@@ -1,5 +1,5 @@
 export type Part = { id: "p1" | "p2" | "p3"; label: string; title: string };
-export type DemoId = "nextToken" | "promptPattern" | "ragPipeline" | "llmOps" | "searchQuality";
+export type DemoId = "nextToken" | "promptPattern" | "ragPipeline" | "searchQuality" | "llmOpsMetrics" | "llmOpsCanary";
 
 export type Slide = {
   id: string;
@@ -134,7 +134,7 @@ export const slides: Slide[] = [
     partId: "p3",
     eyebrow: "PART 3 · 지표",
     kind: "content",
-    demo: "llmOps",
+    demo: "llmOpsMetrics",
     title: "운영은 '보이게' 만드는 것부터",
     body: ["지연(latency) p50/p95 · 요청당 비용 · 토큰 · 품질 점수를 추적한다."],
   },
@@ -143,7 +143,7 @@ export const slides: Slide[] = [
     partId: "p3",
     eyebrow: "PART 3 · 배포",
     kind: "content",
-    demo: "llmOps",
+    demo: "llmOpsCanary",
     title: "프롬프트도 버전이 있다 — 카나리와 롤백",
     body: ["카나리(canary)로 신버전을 소수 트래픽에만 흘리고, 지표가 나빠지면 롤백(rollback)으로 즉시 되돌린다."],
   },
