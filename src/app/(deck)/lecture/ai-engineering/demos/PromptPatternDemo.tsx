@@ -26,15 +26,20 @@ function OutputPane({ sample }: { sample: PatternSample }) {
   );
 }
 
-export default function PromptPatternDemo() {
-  const [key, setKey] = useState<PatternKey>("zero");
+export default function PromptPatternDemo({ variant = "patterns" }: { variant?: "patterns" | "structured" }) {
+  const tabs = promptPatterns.filter((p) =>
+    variant === "structured" ? p.key === "structured" || p.key === "zero" : p.key !== "structured",
+  );
+  const [key, setKey] = useState<PatternKey>(tabs[0].key);
   const sample = promptPatterns.find((p) => p.key === key)!;
 
   return (
     <div className="lec-demo lec-pattern">
       <div className="lec-pat-tabs">
-        {promptPatterns.map((p) => (
-          <button key={p.key} className={p.key === key ? "on" : ""} onClick={() => setKey(p.key)}>{p.label}</button>
+        {tabs.map((p) => (
+          <button key={p.key} className={p.key === key ? "on" : ""} onClick={() => setKey(p.key)}>
+            {variant === "structured" && p.key === "zero" ? "자유 텍스트" : p.label}
+          </button>
         ))}
       </div>
       <div className="lec-pat-panes">
@@ -44,6 +49,7 @@ export default function PromptPatternDemo() {
         </div>
         <OutputPane key={sample.key} sample={sample} />
       </div>
+      {sample.note && <p className="lec-pat-note">{sample.note}</p>}
     </div>
   );
 }

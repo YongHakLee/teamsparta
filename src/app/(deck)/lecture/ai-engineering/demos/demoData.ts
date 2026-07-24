@@ -38,18 +38,20 @@ export function nextTokenCandidates(prefix: string, temperature: number): TokenC
 
 /* ── PromptPattern (s05–s06) ── */
 export type PatternKey = "zero" | "few" | "cot" | "structured";
-export type PatternSample = { key: PatternKey; label: string; prompt: string; output: string[]; structured?: boolean };
+export type PatternSample = { key: PatternKey; label: string; prompt: string; output: string[]; structured?: boolean; note?: string };
 
 export const promptPatterns: PatternSample[] = [
   {
     key: "zero", label: "Zero-shot",
     prompt: "다음 리뷰의 감성을 분류해줘.\n리뷰: \"배송은 빨랐지만 품질이 별로였다\"",
     output: ["부정"],
+    note: "예시 없이 지시만. 형식이 흔들릴 수 있어 간단한 작업에 적합.",
   },
   {
     key: "few", label: "Few-shot",
     prompt: "예시)\n\"최고예요\" → 긍정\n\"다신 안 사요\" → 부정\n\n리뷰: \"배송은 빨랐지만 품질이 별로였다\" →",
     output: ["부정"],
+    note: "예시 2~5개가 출력 형식을 고정한다(in-context learning).",
   },
   {
     key: "cot", label: "CoT",
@@ -60,6 +62,7 @@ export const promptPatterns: PatternSample[] = [
       "3) 핵심은 제품 품질 → 종합 부정",
       "결론: 부정",
     ],
+    note: "'단계적으로'가 중간 추론을 펼치게 해 정확도를 높인다.",
   },
   {
     key: "structured", label: "구조화 출력", structured: true,
@@ -74,6 +77,7 @@ export const promptPatterns: PatternSample[] = [
       "  ]",
       "}",
     ],
+    note: "같은 답을 코드가 바로 쓸 수 있는 JSON으로 못 박는다.",
   },
 ];
 

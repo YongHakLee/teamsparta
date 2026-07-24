@@ -121,6 +121,7 @@
 .lec-pat-lbl { font-size: 0.7em; color: var(--faint); letter-spacing: 0.1em; margin-bottom: 4px; }
 .lec-pat-prompt pre, .lec-pat-output pre { white-space: pre-wrap; font-family: ui-monospace, Menlo, Consolas, var(--font-pretendard), monospace; font-size: 0.82em; line-height: 1.6; background: var(--paper); border: 1px solid var(--hairline); padding: 8px 10px; min-height: 7em; }
 .lec-pat-json { color: var(--accent); }
+.lec-pat-note { margin-top: 0.7em; font-size: 0.82em; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 0.7em; }
 
 /* RagPipeline */
 .lec-rag-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }

@@ -33,7 +33,9 @@ export default function SlideBody({ slide, activeStep }: { slide: Slide; activeS
       )}
       {/* 데모 슬롯: slide.demo 별 컴포넌트 연결 */}
       {slide.demo === "nextToken" && <NextTokenDemo />}
-      {slide.demo === "promptPattern" && <PromptPatternDemo />}
+      {slide.demo === "promptPattern" && (
+        <PromptPatternDemo variant={slide.id === "s06" ? "structured" : "patterns"} />
+      )}
       {slide.demo === "ragPipeline" && <RagPipelineDemo />}
       {slide.demo === "llmOps" && <LlmOpsDashboardDemo />}
     </>
