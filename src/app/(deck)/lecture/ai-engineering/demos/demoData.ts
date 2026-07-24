@@ -82,26 +82,15 @@ export const promptPatterns: PatternSample[] = [
 ];
 
 /* ── RagPipeline (s08) ── */
-export type RagChunk = { id: string; text: string; score: number };
-export type RagCase = {
-  question: string;
-  chunks: RagChunk[];
-  groundedAnswer: string;
-  ungroundedAnswer: string;
-};
+export type RagStageRow = { stage: string; en: string; withRag: string; withoutRag: string };
 
-export const RAG_STAGES = ["질문", "임베딩", "검색", "증강", "생성"] as const;
-
-export const ragCase: RagCase = {
-  question: "우리 회사 환불 정책은 며칠까지 가능해?",
-  chunks: [
-    { id: "policy-04", text: "환불은 구매일로부터 14일 이내 미개봉 상품에 한해 가능하다.", score: 0.94 },
-    { id: "policy-07", text: "단순 변심 환불 시 왕복 배송비는 고객이 부담한다.", score: 0.71 },
-    { id: "faq-12", text: "교환은 상품 수령 후 7일 이내 신청할 수 있다.", score: 0.38 },
-  ],
-  groundedAnswer: "환불은 구매일로부터 14일 이내, 미개봉 상품에 한해 가능합니다. (근거: policy-04)",
-  ungroundedAnswer: "보통 30일 정도면 환불되는 경우가 많습니다. (근거 없음 — 실제 정책과 다를 수 있음)",
-};
+export const ragStageRows: RagStageRow[] = [
+  { stage: "질문", en: "query", withRag: "우리 회사 환불 정책은 며칠까지 가능해?", withoutRag: "우리 회사 환불 정책은 며칠까지 가능해?" },
+  { stage: "임베딩", en: "embedding", withRag: "질문을 의미 벡터로 변환", withoutRag: "— (검색 안 함)" },
+  { stage: "검색", en: "retrieval", withRag: "policy-04(0.94) · policy-07(0.71) 검색", withoutRag: "— (근거 없음)" },
+  { stage: "증강", en: "augmentation", withRag: "찾은 문서를 프롬프트에 근거로 주입", withoutRag: "— (모델 내부 기억에만 의존)" },
+  { stage: "생성", en: "generation", withRag: "환불은 구매일로부터 14일 이내, 미개봉 상품 한정 (근거: policy-04)", withoutRag: "보통 30일 정도면 되는 경우가 많습니다 (근거 없음 — 실제와 다를 수 있음)" },
+];
 
 /* ── LlmOpsDashboard (s10–s11) ── */
 export type Metric = { label: string; value: string; spark: number[] };

@@ -112,6 +112,7 @@ export const slides: Slide[] = [
     kind: "content",
     demo: "ragPipeline",
     title: "RAG 파이프라인 한눈에",
+    steps: 5,
   },
   {
     id: "s09",

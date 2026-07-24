@@ -36,7 +36,7 @@ export default function SlideBody({ slide, activeStep }: { slide: Slide; activeS
       {slide.demo === "promptPattern" && (
         <PromptPatternDemo variant={slide.id === "s06" ? "structured" : "patterns"} />
       )}
-      {slide.demo === "ragPipeline" && <RagPipelineDemo />}
+      {slide.demo === "ragPipeline" && <RagPipelineDemo activeStep={activeStep} />}
       {slide.demo === "llmOps" && <LlmOpsDashboardDemo />}
     </>
   );

@@ -124,22 +124,14 @@
 .lec-pat-note { margin-top: 0.7em; font-size: 0.82em; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 0.7em; }
 
 /* RagPipeline */
-.lec-rag-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.lec-rag-q { font-weight: 700; }
-.lec-rag-toggle { font-size: 0.85em; color: var(--muted); }
-.lec-rag-top button { border: 1px solid var(--ink); background: var(--ink); color: var(--paper); padding: 4px 12px; cursor: pointer; }
-.lec-rag-stages { list-style: none; display: flex; gap: 8px; padding: 0; margin: 0.9em 0; }
-.lec-rag-stages li { flex: 1; text-align: center; border: 1px solid var(--hairline); padding: 6px 4px; font-size: 0.8em; color: var(--faint); position: relative; transition: all 0.3s; }
-.lec-rag-stages li.on { border-color: var(--accent); color: var(--ink); background: var(--paper); }
-.lec-rag-chunks { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; margin-bottom: 0.8em; }
-.lec-rag-chunks li { display: flex; gap: 10px; align-items: center; border: 1px solid var(--hairline); padding: 5px 9px; font-size: 0.82em; opacity: 0.5; }
-.lec-rag-chunks li.hit { opacity: 1; border-color: var(--accent); }
-.lec-rag-id { flex: 0 0 5em; color: var(--muted); }
-.lec-rag-txt { flex: 1; }
-.lec-rag-score { flex: 0 0 3em; text-align: right; color: var(--accent); }
-.lec-rag-answer { border-left: 3px solid var(--accent); padding: 8px 12px; font-size: 0.9em; background: var(--paper); }
-.lec-rag-answer.ungrounded { border-left-color: var(--faint); color: var(--muted); }
-@media (prefers-reduced-motion: reduce) { .lec-rag-stages li { transition: none; } }
+.lec-rag-table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+.lec-rag-table th, .lec-rag-table td { border: 1px solid var(--hairline); padding: 6px 9px; text-align: left; vertical-align: top; }
+.lec-rag-table th { font-size: 0.9em; color: var(--faint); font-weight: 700; }
+.lec-rag-stagecell { white-space: nowrap; }
+.lec-rag-stagecell span { display: block; font-size: 0.85em; color: var(--muted); }
+.lec-rag-off { color: var(--muted); }
+.lec-rag-final td { background: var(--paper); }
+.lec-rag-final .lec-rag-off { color: var(--faint); }
 
 /* LlmOpsDashboard */
 .lec-ops-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
