@@ -20,7 +20,7 @@ export default function NextTokenDemo() {
         </label>
         <button onClick={() => setTokens([])}>처음부터</button>
       </div>
-      {cands.length > 0 ? (
+      {cands.length > 0 && (
         <ul className="lec-nt-cands">
           {cands.map((c) => (
             <li key={c.token}>
@@ -32,8 +32,6 @@ export default function NextTokenDemo() {
             </li>
           ))}
         </ul>
-      ) : (
-        <p className="lec-mut lec-nt-done">문장 완성 — [처음부터]로 다시</p>
       )}
     </div>
   );

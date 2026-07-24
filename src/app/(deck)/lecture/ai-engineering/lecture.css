@@ -111,7 +111,6 @@
 .lec-nt-bar { flex: 1; height: 8px; background: var(--hairline); }
 .lec-nt-bar span { display: block; height: 100%; background: var(--accent); }
 .lec-nt-prob { flex: 0 0 3em; text-align: right; color: var(--muted); }
-.lec-nt-done { margin-top: 0.5em; }
 @media (prefers-reduced-motion: reduce) { .lec-nt-caret { animation: none; } }
 
 /* PromptPattern */
