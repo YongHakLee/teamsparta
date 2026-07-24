@@ -1,5 +1,5 @@
 export type Part = { id: "p1" | "p2" | "p3"; label: string; title: string };
-export type DemoId = "nextToken" | "promptPattern" | "ragPipeline" | "searchQuality" | "llmOpsMetrics" | "llmOpsCanary";
+export type DemoId = "nextToken" | "promptPattern" | "ragPipeline" | "searchQuality" | "llmOpsMetrics" | "llmOpsCanary" | "evalRun";
 
 export type Slide = {
   id: string;
@@ -153,6 +153,7 @@ export const slides: Slide[] = [
     eyebrow: "PART 3 · 자동 평가",
     kind: "content",
     steps: 3,
+    demo: "evalRun",
     title: "자동 평가(Evals)로 회귀를 막는다",
     body: [
       "평가셋 — 대표 질문·기대 답을 모은다",

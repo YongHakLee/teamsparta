@@ -5,6 +5,7 @@ import RagPipelineDemo from "./demos/RagPipelineDemo";
 import LlmOpsMetricsDemo from "./demos/LlmOpsMetricsDemo";
 import LlmOpsCanaryDemo from "./demos/LlmOpsCanaryDemo";
 import SearchQualityTable from "./demos/SearchQualityTable";
+import EvalRunTable from "./demos/EvalRunTable";
 
 /* activeStep: 0이면 아무 fragment도 안 열림, n이면 data-frag<=n 까지 열림 */
 export default function SlideBody({ slide, activeStep }: { slide: Slide; activeStep: number }) {
@@ -42,6 +43,7 @@ export default function SlideBody({ slide, activeStep }: { slide: Slide; activeS
       {slide.demo === "searchQuality" && <SearchQualityTable />}
       {slide.demo === "llmOpsMetrics" && <LlmOpsMetricsDemo />}
       {slide.demo === "llmOpsCanary" && <LlmOpsCanaryDemo />}
+      {slide.demo === "evalRun" && <EvalRunTable />}
     </>
   );
 }

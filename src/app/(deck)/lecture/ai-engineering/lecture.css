@@ -165,6 +165,13 @@
 .lec-canary-now { font-size: 0.85em; border-left: 3px solid var(--accent); padding: 6px 10px; }
 .lec-canary-now.danger { color: var(--accent); }
 
+/* EvalRunTable (s12) */
+.lec-eval-table { width: 100%; border-collapse: collapse; font-size: 0.78em; }
+.lec-eval-table th, .lec-eval-table td { border: 1px solid var(--hairline); padding: 5px 8px; text-align: left; vertical-align: top; }
+.lec-eval-table th { color: var(--faint); font-weight: 700; }
+.lec-eval-table tr.fail td { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.lec-eval-note { margin-top: 0.7em; font-size: 0.8em; color: var(--muted); line-height: 1.5; }
+
 /* ── 조작 힌트 / 좁은 화면 안내 ── */
 .lec-hint { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 30; font-size: 12px; color: var(--faint); background: var(--paper); padding: 4px 10px; border: 1px solid var(--hairline); animation: lec-fade 0.4s ease 5s forwards; }
 @keyframes lec-fade { to { opacity: 0; visibility: hidden; } }

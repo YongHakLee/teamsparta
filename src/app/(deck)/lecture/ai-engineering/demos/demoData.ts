@@ -114,6 +114,15 @@ export const opsMetrics: Metric[] = [
 
 export const canarySteps = [5, 25, 50, 100] as const;
 
+/* ── EvalRunTable (s12) ── */
+export type EvalRow = { q: string; expected: string; got: string; score: number; pass: boolean };
+
+export const evalRows: EvalRow[] = [
+  { q: "환불 기간은?", expected: "14일 이내 미개봉", got: "14일 이내, 미개봉 상품", score: 0.95, pass: true },
+  { q: "교환 기간은?", expected: "수령 후 7일 이내", got: "보통 2주 정도", score: 0.40, pass: false },
+  { q: "배송비 부담은?", expected: "단순 변심 시 고객 부담", got: "단순 변심 시 고객이 왕복 배송비 부담", score: 0.92, pass: true },
+];
+
 /* 신버전 비율이 높아질수록(불량 신버전 가정) 에러율↑·품질↓. 40%↑에서 위험. */
 export function canaryOutcome(canaryPct: number): { errorRate: number; quality: number; danger: boolean } {
   const p = Math.max(0, Math.min(100, canaryPct)) / 100;
