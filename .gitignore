@@ -43,7 +43,8 @@ next-env.d.ts
 # Claude
 CLAUDE.md
 AGENTS.md
-docs/
+docs/*
+!docs/lecture/
 prompt.md
 .superpowers/
 
@@ -53,3 +54,4 @@ prompt.md
 # etc
 samsung.html
 /projects/
+.prompt.md
