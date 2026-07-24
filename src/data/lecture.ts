@@ -27,7 +27,7 @@ export const parts: Part[] = [
 export const slides: Slide[] = [
   {
     id: "s01",
-    eyebrow: "AI ENGINEERING · 15MIN",
+    eyebrow: "AI ENGINEERING",
     kind: "cover",
     title: deckMeta.title,
     body: [deckMeta.subtitle],
@@ -39,8 +39,8 @@ export const slides: Slide[] = [
     title: "AI 서비스는 세 축으로 완성된다",
     steps: 3,
     body: [
-      "설계 — 모델을 이해하고 올바르게 지시한다 (프롬프트 엔지니어링)",
-      "연결 — 신뢰할 수 있는 외부 지식을 붙인다 (RAG)",
+      "설계 — 모델을 이해하고 프롬프트 엔지니어링(prompt engineering)으로 올바르게 지시한다",
+      "연결 — 신뢰할 수 있는 외부 지식을 RAG(Retrieval-Augmented Generation)로 붙인다",
       "운영 — 안정적으로 지표를 보며 배포·관리한다 (LLMOps)",
     ],
   },
@@ -51,7 +51,6 @@ export const slides: Slide[] = [
     kind: "content",
     demo: "nextToken",
     title: "LLM은 '다음 단어'를 확률로 고른다",
-    body: ["아래에서 직접 다음 토큰을 골라 문장을 이어보세요."],
   },
   {
     id: "s04",
@@ -61,9 +60,9 @@ export const slides: Slide[] = [
     steps: 3,
     title: "그래서 생기는 세 가지 한계",
     body: [
-      "환각 — 그럴듯한 거짓을 자신 있게 만든다",
-      "지식 컷오프 — 학습 시점 이후를 모른다",
-      "편향 — 학습 데이터의 치우침을 물려받는다",
+      "환각(hallucination) — 그럴듯한 거짓을 자신 있게 만든다",
+      "지식 컷오프(knowledge cutoff) — 학습 시점 이후를 모른다",
+      "편향(bias) — 학습 데이터의 치우침을 물려받는다",
     ],
   },
   {
@@ -72,9 +71,13 @@ export const slides: Slide[] = [
     eyebrow: "PART 1 · 프롬프팅",
     kind: "content",
     demo: "promptPattern",
-    steps: 0,
+    steps: 3,
     title: "같은 질문, 다른 지시 방법",
-    body: ["Zero-shot · Few-shot · CoT를 아래에서 전환해 비교하세요."],
+    body: [
+      "Zero-shot — 예시 없이 지시만 준다. 빠르고 저렴, 형식은 흔들릴 수 있다",
+      "Few-shot(in-context learning) — 예시 2~5개로 형식·톤을 고정한다",
+      "CoT(Chain-of-Thought) — '단계적으로 생각하라'로 추론 정확도를 높인다",
+    ],
   },
   {
     id: "s06",
@@ -82,8 +85,13 @@ export const slides: Slide[] = [
     eyebrow: "PART 1 · 구조화 출력",
     kind: "content",
     demo: "promptPattern",
+    steps: 3,
     title: "출력을 JSON으로 못 박는 이유",
-    body: ["자유 텍스트 vs JSON 스키마 — 데모의 '구조화' 탭을 보세요."],
+    body: [
+      "왜 — 뒤의 코드가 답을 파싱·저장·분기해야 한다. 형식이 매번 같아야 한다",
+      "어떻게 — JSON 스키마 지정, JSON 모드, 함수 호출(function calling)로 형식을 강제한다",
+      "안전장치 — 받는 쪽에서 스키마 검증(schema validation), 실패 시 재요청·기본값",
+    ],
   },
   {
     id: "s07",
@@ -94,7 +102,7 @@ export const slides: Slide[] = [
     title: "모르는 것은 '찾아서' 답하게 한다",
     body: [
       "문제 — 최신·사내 지식은 모델 안에 없다 (컷오프·환각)",
-      "해법 — 질문에 맞는 문서를 찾아 프롬프트에 넣어준다 (RAG)",
+      "해법 — 질문에 맞는 문서를 찾아, 답변의 근거로 함께 제공한다 (프롬프트에 주입 · RAG)",
     ],
   },
   {
@@ -104,7 +112,6 @@ export const slides: Slide[] = [
     kind: "content",
     demo: "ragPipeline",
     title: "RAG 파이프라인 한눈에",
-    body: ["질문 → 임베딩 → 검색 → 증강 → 생성. 아래에서 ▶로 재생하세요."],
   },
   {
     id: "s09",
@@ -114,10 +121,10 @@ export const slides: Slide[] = [
     steps: 4,
     title: "검색 품질을 좌우하는 것들",
     body: [
-      "청킹 — 문서를 적당한 크기로 쪼갠다",
-      "임베딩 — 의미를 잘 담는 모델을 고른다",
+      "청킹(chunking) — 문서를 적당한 크기로 쪼갠다",
+      "임베딩(embedding) — 의미를 잘 담는 모델을 고른다",
       "top-k — 몇 개를 가져올지 균형을 잡는다",
-      "리랭킹 — 가져온 것 중 진짜 관련된 걸 위로",
+      "리랭킹(reranking) — 가져온 것 중 진짜 관련된 걸 위로",
     ],
   },
   {
@@ -127,7 +134,7 @@ export const slides: Slide[] = [
     kind: "content",
     demo: "llmOps",
     title: "운영은 '보이게' 만드는 것부터",
-    body: ["지연(p50/p95) · 요청당 비용 · 토큰 · 품질 점수를 추적한다."],
+    body: ["지연(latency) p50/p95 · 요청당 비용 · 토큰 · 품질 점수를 추적한다."],
   },
   {
     id: "s11",
@@ -136,12 +143,12 @@ export const slides: Slide[] = [
     kind: "content",
     demo: "llmOps",
     title: "프롬프트도 버전이 있다 — 카나리와 롤백",
-    body: ["신버전을 소수 트래픽에만 흘리고(카나리), 지표가 나빠지면 즉시 되돌린다(롤백)."],
+    body: ["카나리(canary)로 신버전을 소수 트래픽에만 흘리고, 지표가 나빠지면 롤백(rollback)으로 즉시 되돌린다."],
   },
   {
     id: "s12",
     partId: "p3",
-    eyebrow: "PART 3 · 자동 평가",
+    eyebrow: "PART 3 · 자동 평가(evals)",
     kind: "content",
     steps: 3,
     title: "자동 평가(Evals)로 회귀를 막는다",
