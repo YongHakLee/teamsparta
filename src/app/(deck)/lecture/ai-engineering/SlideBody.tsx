@@ -3,6 +3,7 @@ import NextTokenDemo from "./demos/NextTokenDemo";
 import PromptPatternDemo from "./demos/PromptPatternDemo";
 import RagPipelineDemo from "./demos/RagPipelineDemo";
 import LlmOpsDashboardDemo from "./demos/LlmOpsDashboardDemo";
+import SearchQualityTable from "./demos/SearchQualityTable";
 
 /* activeStep: 0이면 아무 fragment도 안 열림, n이면 data-frag<=n 까지 열림 */
 export default function SlideBody({ slide, activeStep }: { slide: Slide; activeStep: number }) {
@@ -38,6 +39,7 @@ export default function SlideBody({ slide, activeStep }: { slide: Slide; activeS
       )}
       {slide.demo === "ragPipeline" && <RagPipelineDemo activeStep={activeStep} />}
       {slide.demo === "llmOps" && <LlmOpsDashboardDemo />}
+      {slide.demo === "searchQuality" && <SearchQualityTable />}
     </>
   );
 }

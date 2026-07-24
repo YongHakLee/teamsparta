@@ -133,6 +133,15 @@
 .lec-rag-final td { background: var(--paper); }
 .lec-rag-final .lec-rag-off { color: var(--faint); }
 
+/* SearchQualityTable */
+.lec-knob-table { width: 100%; border-collapse: collapse; font-size: 0.8em; }
+.lec-knob-table th, .lec-knob-table td { border: 1px solid var(--hairline); padding: 6px 9px; text-align: left; vertical-align: top; }
+.lec-knob-table th { color: var(--faint); font-weight: 700; }
+.lec-knob-name { white-space: nowrap; }
+.lec-knob-name span { display: block; font-size: 0.85em; color: var(--muted); }
+.lec-knob-bad { color: var(--muted); }
+.lec-knob-good { color: var(--ink); }
+
 /* LlmOpsDashboard */
 .lec-ops-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .lec-ops-card { border: 1px solid var(--hairline); padding: 8px 10px; }

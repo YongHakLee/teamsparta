@@ -1,5 +1,5 @@
 export type Part = { id: "p1" | "p2" | "p3"; label: string; title: string };
-export type DemoId = "nextToken" | "promptPattern" | "ragPipeline" | "llmOps";
+export type DemoId = "nextToken" | "promptPattern" | "ragPipeline" | "llmOps" | "searchQuality";
 
 export type Slide = {
   id: string;
@@ -120,6 +120,7 @@ export const slides: Slide[] = [
     eyebrow: "PART 2 · 검색 품질",
     kind: "content",
     steps: 4,
+    demo: "searchQuality",
     title: "검색 품질을 좌우하는 것들",
     body: [
       "청킹(chunking) — 문서를 적당한 크기로 쪼갠다",

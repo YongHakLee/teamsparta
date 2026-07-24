@@ -92,6 +92,16 @@ export const ragStageRows: RagStageRow[] = [
   { stage: "생성", en: "generation", withRag: "환불은 구매일로부터 14일 이내, 미개봉 상품 한정 (근거: policy-04)", withoutRag: "보통 30일 정도면 되는 경우가 많습니다 (근거 없음 — 실제와 다를 수 있음)" },
 ];
 
+/* ── SearchQualityTable (s09) ── */
+export type KnobRow = { knob: string; en: string; bad: string; good: string };
+
+export const searchQualityRows: KnobRow[] = [
+  { knob: "청킹", en: "chunking", bad: "너무 크면 한 청크에 여러 주제 → 검색 정밀도↓ / 너무 작으면 문맥 잘림", good: "문단 경계 + 오버랩, 수백 토큰 안팎에서 시작해 조정" },
+  { knob: "임베딩", en: "embedding", bad: "도메인·언어와 안 맞는 모델 → 의미 유사도 부정확", good: "한국어·전문용어에 강한 모델 선택" },
+  { knob: "top-k", en: "top-k", bad: "적으면 정답 문서 놓침(재현율↓) / 많으면 잡음·비용↑", good: "넉넉히 뽑고 리랭킹으로 정제" },
+  { knob: "리랭킹", en: "reranking", bad: "벡터 검색 상위가 부정확할 때 그대로 사용", good: "관련도 재점수화로 진짜 관련 문서를 위로" },
+];
+
 /* ── LlmOpsDashboard (s10–s11) ── */
 export type Metric = { label: string; value: string; spark: number[] };
 
