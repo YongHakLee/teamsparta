@@ -92,15 +92,100 @@ export const ragStageRows: RagStageRow[] = [
   { stage: "생성", en: "generation", withRag: "환불은 구매일로부터 14일 이내, 미개봉 상품 한정 (근거: policy-04)", withoutRag: "보통 30일 정도면 되는 경우가 많습니다 (근거 없음 — 실제와 다를 수 있음)" },
 ];
 
-/* ── SearchQualityTable (s09) ── */
-export type KnobRow = { knob: string; en: string; bad: string; good: string };
+/* ── 표 계열 데모 공용 (s06 · s09 · s11 · s12) ──
+   ComparisonTable이 그리는 데이터. 첫 열은 CSS가 굵게 처리하므로 항목명을 둔다. */
+export type TableCell = { text: string; en?: string; tone?: "bad" | "good" };
+export type TableSpec = { columns: string[]; rows: TableCell[][]; note?: string };
 
-export const searchQualityRows: KnobRow[] = [
-  { knob: "청킹", en: "chunking", bad: "너무 크면 한 청크에 여러 주제 → 검색 정밀도↓ / 너무 작으면 문맥 잘림", good: "문단 경계 + 오버랩, 수백 토큰 안팎에서 시작해 조정" },
-  { knob: "임베딩", en: "embedding", bad: "도메인·언어와 안 맞는 모델 → 의미 유사도 부정확", good: "한국어·전문용어에 강한 모델 선택" },
-  { knob: "top-k", en: "top-k", bad: "적으면 정답 문서 놓침(재현율↓) / 많으면 잡음·비용↑", good: "넉넉히 뽑고 리랭킹으로 정제" },
-  { knob: "리랭킹", en: "reranking", bad: "벡터 검색 상위가 부정확할 때 그대로 사용", good: "관련도 재점수화로 진짜 관련 문서를 위로" },
-];
+/* 셀 축약 헬퍼 — 데이터가 길어져 읽기 어려워지는 것을 막는다. */
+const c = (text: string, tone?: TableCell["tone"], en?: string): TableCell => ({ text, tone, en });
+
+/* s11 — 검색 품질 손잡이 */
+export const searchQualityTable: TableSpec = {
+  columns: ["손잡이", "나쁜 설정 증상", "좋은 방향"],
+  rows: [
+    [c("청킹", undefined, "chunking"), c("너무 크면 한 청크에 여러 주제 → 검색 정밀도↓ / 너무 작으면 문맥 잘림", "bad"), c("문단 경계 + 오버랩, 수백 토큰 안팎에서 시작해 조정", "good")],
+    [c("임베딩", undefined, "embedding"), c("도메인·언어와 안 맞는 모델 → 의미 유사도 부정확", "bad"), c("한국어·전문용어에 강한 모델 선택", "good")],
+    [c("top-k", undefined, "top-k"), c("적으면 정답 문서 놓침(재현율↓) / 많으면 잡음·비용↑", "bad"), c("넉넉히 뽑고 리랭킹으로 정제", "good")],
+    [c("리랭킹", undefined, "reranking"), c("벡터 검색 상위가 부정확할 때 그대로 사용", "bad"), c("관련도 재점수화로 진짜 관련 문서를 위로", "good")],
+  ],
+};
+
+/* s06 — 프롬프트 안티패턴 */
+export const antiPatternTable: TableSpec = {
+  columns: ["안티패턴", "나쁜 예", "증상", "고친 예"],
+  rows: [
+    [
+      c("모호한 지시"),
+      c("\"리뷰 좀 정리해줘\"", "bad"),
+      c("요약인지 분류인지 모델이 추측 → 호출마다 형식이 달라진다", "bad"),
+      c("\"리뷰를 긍정/부정/중립 중 하나로 분류하고 한 단어로만 답해줘\"", "good"),
+    ],
+    [
+      c("출력 형식 미지정"),
+      c("\"이 리뷰의 감성을 알려줘\"", "bad"),
+      c("\"약간 부정적인 편입니다\" 같은 문장이 와서 코드가 파싱에 실패한다", "bad"),
+      c("\"sentiment 키만 가진 JSON으로 답해줘. 값은 positive/negative/neutral 중 하나\"", "good"),
+    ],
+    [
+      c("한 번에 여러 작업"),
+      c("\"요약하고 번역하고 키워드도 뽑아줘\"", "bad"),
+      c("뒤쪽 작업일수록 품질이 떨어지거나 통째로 누락된다", "bad"),
+      c("작업을 나눠 호출하거나, 출력 스키마에 항목을 각각 명시한다", "good"),
+    ],
+    [
+      c("부정형만 지시"),
+      c("\"틀린 말 하지 마\"", "bad"),
+      c("무엇을 해야 하는지가 없어 결국 그럴듯하게 지어낸다", "bad"),
+      c("\"제공된 문서에 근거가 없으면 '문서에 없음'이라고 답해줘\"", "good"),
+    ],
+  ],
+  note: "공통점은 하나다 — 소원을 빌지 말고 지시를 하라. 무엇을, 어떤 형식으로, 근거가 없을 땐 어떻게 할지까지 적는다.",
+};
+
+/* s09 — 임베딩·유사도. 벡터는 실제 값이 아니라 이해를 돕는 축약 표기다. */
+export const embeddingTable: TableSpec = {
+  columns: ["문서 속 문장", "의미 벡터(축약)", "질문과의 유사도", "검색됨?"],
+  rows: [
+    [c("환불은 구매일로부터 14일 이내 가능합니다"), c("[0.82, -0.11, 0.44, …]"), c("0.94", "good"), c("✅ 1순위", "good")],
+    [c("교환은 수령 후 7일 이내에 신청하세요"), c("[0.71, -0.08, 0.39, …]"), c("0.71", "good"), c("✅ 2순위", "good")],
+    [c("배송은 영업일 기준 2~3일 걸립니다"), c("[0.12, 0.55, -0.20, …]"), c("0.28", "bad"), c("❌ 탈락", "bad")],
+    [c("채용 공고는 상시 게시됩니다"), c("[-0.34, 0.09, 0.61, …]"), c("0.05", "bad"), c("❌ 탈락", "bad")],
+  ],
+  note: "질문 \"환불은 며칠까지 되나요?\"를 같은 방식으로 벡터로 바꾼 뒤, 코사인 유사도가 높은 순으로 top-k개를 가져온다. 벡터 값과 유사도 수치는 설명용 예시다.",
+};
+
+/* s12 — RAG 실패 유형과 처방 */
+export const ragFailureTable: TableSpec = {
+  columns: ["실패 유형", "증상", "원인", "처방"],
+  rows: [
+    [
+      c("검색 실패", undefined, "retrieval miss"),
+      c("문서에 답이 있는데도 \"모른다\"고 답한다", "bad"),
+      c("청크가 너무 커서 핵심 문장이 묻히거나, top-k가 모자라 정답 문서가 잘렸다", "bad"),
+      c("청크를 줄이고 오버랩을 주기 · top-k를 넉넉히 뽑고 리랭킹으로 정제", "good"),
+    ],
+    [
+      c("잡음 유입", undefined, "noise"),
+      c("엉뚱한 문서를 근거로 들며 자신 있게 틀린다", "bad"),
+      c("유사도만으로 뽑아 주제가 다른 청크가 상위에 섞였다", "bad"),
+      c("메타데이터 필터로 후보를 좁히고, 리랭킹으로 상위를 다시 정렬한다", "good"),
+    ],
+    [
+      c("근거 무시", undefined, "groundedness"),
+      c("근거를 줬는데도 모델이 제 기억으로 답한다", "bad"),
+      c("프롬프트가 근거 사용을 강제하지 않아 내부 지식이 이긴다", "bad"),
+      c("\"제공된 문서만 근거로 쓰고 없으면 없다고 답하라\" + 출처 표기(citation) 요구", "good"),
+    ],
+    [
+      c("최신성 실패", undefined, "staleness"),
+      c("이미 바뀐 옛 정책을 근거로 답한다", "bad"),
+      c("원본이 바뀌었는데 색인이 따라가지 못했다", "bad"),
+      c("문서 변경 시 재색인 · 문서에 유효일자 메타데이터를 붙여 필터링", "good"),
+    ],
+  ],
+  note: "고칠 수 있으려면 어느 단계가 깨졌는지 나눠 봐야 한다. 검색 지표(recall@k)와 생성 지표(faithfulness)를 따로 재면 검색이 문제인지 생성이 문제인지 바로 갈린다.",
+};
 
 /* ── LlmOpsMetrics (s10) / LlmOpsCanary (s11) ── */
 export type Metric = { label: string; value: string; spark: number[]; desc: string };
