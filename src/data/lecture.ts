@@ -3,7 +3,6 @@ export type DemoId =
   | "nextToken"
   | "promptPattern"
   | "ragPipeline"
-  | "searchQuality"
   | "antiPattern"
   | "embedding"
   | "ragFailure";
@@ -23,7 +22,8 @@ export type Slide = {
 
 export const deckMeta = {
   title: "AI 리터러시 · 프롬프트 엔지니어링 · RAG",
-  subtitle: "모델을 이해해 올바르게 지시하고, 신뢰할 수 있는 정보를 연결한다",
+  subtitle:
+    "모델을 이해하여 올바르게 지시하고, 신뢰할 수 있는 정보를 연결한다.",
   author: "이용학",
 };
 
@@ -47,8 +47,8 @@ export const slides: Slide[] = [
     steps: 2,
     title: "두 가지 방식으로 AI를 다룬다",
     body: [
-      "이해하고 지시한다 — 모델이 답을 만드는 방식을 알고, 프롬프트 엔지니어링(prompt engineering)으로 정확히 지시한다",
-      "연결한다 — 모델이 모르는 최신·사내 지식을 RAG(Retrieval-Augmented Generation)로 붙인다",
+      "이해하고 지시한다 — 모델이 답을 만드는 방식을 이해하고, 프롬프트 엔지니어링(prompt engineering)으로 정확히 지시한다.",
+      "연결한다 — 모델이 모르는 최신·세부 지식을 RAG(Retrieval-Augmented Generation)로 붙인다.",
     ],
   },
   {
@@ -57,11 +57,12 @@ export const slides: Slide[] = [
     eyebrow: "PART 1 · 동작 원리",
     kind: "content",
     demo: "nextToken",
-    steps: 2,
-    title: "LLM은 '다음 단어'를 확률로 고른다",
+    steps: 3,
+    title: "LLM은 '다음 단어'를 확률로 고른다.",
     body: [
-      "토큰(token) — 모델은 글자가 아니라 토큰 단위로 문장을 쪼개 읽는다",
-      "확률분포 — 다음에 올 토큰마다 확률을 매기고 그중 하나를 골라 이어붙인다. temperature · top-p로 그 무작위성을 조절하며, 컨텍스트 윈도우(context window)를 벗어난 앞부분은 아예 보이지 않는다",
+      "토큰(token) — 모델은 글자가 아니라 토큰 단위로 문장을 쪼개 읽는다.",
+      "확률분포 — 다음에 올 토큰 후보에 확률을 매기고 그중 하나를 골라 이어붙인다.",
+      "temperature · top-p — 토큰 선택의 무작위성을 조절한다.",
     ],
   },
   {
@@ -72,9 +73,9 @@ export const slides: Slide[] = [
     steps: 3,
     title: "그래서 생기는 세 가지 한계",
     body: [
-      "환각(hallucination) — 그럴듯한 거짓을 자신 있게 만든다",
-      "지식 컷오프(knowledge cutoff) — 학습 시점 이후를 모른다",
-      "편향(bias) — 학습 데이터의 치우침을 물려받는다",
+      "환각(hallucination) — 그럴듯한 거짓을 자신 있게 만든다.",
+      "지식 컷오프(knowledge cutoff) — 학습 시점 이후를 모른다.",
+      "편향(bias) — 학습 데이터의 치우침을 물려받는다.",
     ],
   },
   {
@@ -87,9 +88,9 @@ export const slides: Slide[] = [
     steps: 3,
     title: "같은 질문, 다른 지시 방법",
     body: [
-      "Zero-shot — 예시 없이 지시만 준다. 빠르고 저렴, 형식은 흔들릴 수 있다",
-      "Few-shot(in-context learning) — 예시 2~5개로 형식·톤을 고정한다",
-      "CoT(Chain-of-Thought) — '단계적으로 생각하라'로 추론 정확도를 높인다",
+      "Zero-shot — 예시 없이 지시만 준다. 빠르고 저렴, 형식은 흔들릴 수 있다.",
+      "Few-shot(in-context learning) — 예시 2~5개로 형식·톤을 고정한다.",
+      "CoT(Chain-of-Thought) — '단계적으로 생각하라'로 추론 정확도를 높인다.",
     ],
   },
   {
@@ -101,7 +102,7 @@ export const slides: Slide[] = [
     steps: 4,
     title: "프롬프트 안티패턴 — 나쁜 지시가 만드는 나쁜 답",
     body: [
-      "고치는 법은 늘 같다 — 무엇을, 어떤 형식으로, 근거가 없을 땐 어떻게 답할지까지 적는다",
+      "고치는 법은 늘 같다 — 무엇을, 어떤 형식으로, 근거가 없을 때는 어떻게 답할지까지 적는다.",
     ],
   },
   {
@@ -111,12 +112,12 @@ export const slides: Slide[] = [
     kind: "content",
     demo: "promptPattern",
     demoVariant: "structured",
-    steps: 3,
-    title: "출력을 JSON으로 못 박는 이유",
+    steps: 2,
+    title: "출력을 JSON으로 받는 이유",
+    /* 두 줄 모두 한 줄에 들어와야 16:9를 지킨다(각 줄 70자 안팎이 상한). */
     body: [
-      "왜 — 뒤의 코드가 답을 파싱·저장·분기해야 한다. 형식이 매번 같아야 한다",
-      "어떻게 — JSON 스키마 지정, JSON 모드, 함수 호출(function calling)로 형식을 강제한다",
-      "안전장치 — 받는 쪽에서 스키마 검증(schema validation), 실패 시 재요청·기본값",
+      "왜 — 뒤의 코드가 답을 파싱·저장·분기하려면 형식이 매번 같아야 한다.",
+      "어떻게 — 스키마·JSON 모드·함수 호출(function calling)로 형식을 강제하고, 받는 쪽에서 검증한다.",
     ],
   },
   {
@@ -125,10 +126,10 @@ export const slides: Slide[] = [
     eyebrow: "PART 2 · 필요성",
     kind: "content",
     steps: 2,
-    title: "모르는 것은 '찾아서' 답하게 한다",
+    title: "모르는 것은 '찾아서' 답하게 한다.",
     body: [
-      "문제 — 최신·사내 지식은 모델 안에 없다 (컷오프·환각)",
-      "해법 — 질문에 맞는 문서를 찾아, 답변의 근거로 함께 제공한다 (프롬프트에 주입 · RAG)",
+      "문제 — 최신·세부 지식은 모델 안에 없다 (컷오프·환각)",
+      "해법 — 질문에 맞는 문서를 찾아, 답변의 근거로 함께 제공한다. (프롬프트에 주입 · RAG)",
     ],
   },
   {
@@ -140,8 +141,8 @@ export const slides: Slide[] = [
     steps: 4,
     title: "벡터 검색은 어떻게 의미를 찾나",
     body: [
-      "임베딩(embedding) — 문장을 의미가 담긴 숫자 벡터로 바꾼다",
-      "코사인 유사도(cosine similarity) — 두 벡터가 이루는 각도로 의미의 가까움을 재고, 가까운 순으로 top-k개를 가져온다",
+      "임베딩(embedding) — 문장을 의미가 담긴 숫자 벡터로 바꾼다.",
+      "코사인 유사도(cosine similarity) — 두 벡터가 이루는 각도로 의미가 가까운 순으로 top-k개를 가져온다.",
     ],
   },
   {
@@ -158,13 +159,12 @@ export const slides: Slide[] = [
     partId: "p2",
     eyebrow: "PART 2 · 검색 품질",
     kind: "content",
-    demo: "searchQuality",
     steps: 4,
     title: "검색 품질을 좌우하는 것들",
     body: [
-      "청킹(chunking) — 문서를 적당한 크기로 쪼갠다",
-      "임베딩 — 의미를 잘 담는 모델을 고른다",
-      "top-k — 몇 개를 가져올지 균형을 잡는다",
+      "청킹(chunking) — 문서를 적당한 크기로 쪼갠다.",
+      "임베딩 — 의미를 잘 담는 모델을 고른다.",
+      "top-k — 몇 개를 가져올지 균형을 잡는다.",
       "리랭킹(reranking) — 가져온 것 중 진짜 관련된 걸 위로",
     ],
   },
@@ -177,7 +177,7 @@ export const slides: Slide[] = [
     steps: 4,
     title: "RAG가 틀리는 순간 — 실패 유형과 처방",
     body: [
-      "붙였다고 끝이 아니다. 어느 단계가 깨졌는지 나눠 봐야 고칠 수 있다",
+      "붙였다고 끝이 아니다. 어느 단계가 깨졌는지 나눠 봐야 고칠 수 있다.",
     ],
   },
   {
@@ -185,10 +185,10 @@ export const slides: Slide[] = [
     eyebrow: "정리",
     kind: "content",
     steps: 2,
-    title: "두 축을 한 장으로",
+    title: "정리",
     body: [
-      "이해하고 지시한다 — 확률로 답하는 모델의 한계를 알고, 형식과 근거까지 지시로 못 박는다",
-      "연결한다 — 모델이 모르는 지식을 찾아 근거로 붙이고, 실패 지점을 나눠 고친다",
+      "이해하고 지시한다 — 확률로 답하는 모델의 한계를 이해하고, 형식과 근거까지 지시한다.",
+      "연결한다 — 모델이 모르는 지식을 찾아 근거로 붙이고, 실패 지점을 나누어 고친다.",
     ],
   },
   {
@@ -196,9 +196,6 @@ export const slides: Slide[] = [
     eyebrow: "END",
     kind: "closing",
     title: "감사합니다",
-    body: [
-      "이해하고 지시한다 → 연결한다. 이 두 축이 AI 서비스의 뼈대입니다.",
-      "질문 환영합니다.",
-    ],
+    body: ["이해하고 지시한다 → 연결한다. 이 두 축이 AI 서비스의 뼈대입니다."],
   },
 ];

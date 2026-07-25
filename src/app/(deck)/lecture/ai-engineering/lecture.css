@@ -98,14 +98,17 @@
 .lec-demo { margin-top: 1.1em; border: 1px solid var(--hairline); background: #fff; padding: 1em 1.2em; font-size: 0.8em; }
 
 /* NextToken */
-.lec-nt-sentence { font-size: 1.4em; min-height: 1.6em; display: flex; align-items: center; }
+/* s03은 본문이 세 줄이라 데모에 남는 높이가 빠듯하다.
+   아래 여백값들은 슬라이드를 16:9 안에 두기 위해 조인 것이니 키우지 말 것. */
+.lec-demo.lec-nexttoken { margin-top: 0.6em; }
+.lec-nt-sentence { font-size: 1.4em; min-height: 1.35em; display: flex; align-items: center; }
 .lec-nt-caret { display: inline-block; width: 0.5em; height: 1.1em; background: var(--accent); margin-left: 2px; animation: lec-blink 1s steps(1) infinite; }
 @keyframes lec-blink { 50% { opacity: 0; } }
-.lec-nt-controls { display: flex; gap: 1.2em; align-items: center; margin: 0.8em 0; font-size: 0.8em; color: var(--muted); }
+.lec-nt-controls { display: flex; gap: 1.2em; align-items: center; margin: 0.35em 0; font-size: 0.8em; color: var(--muted); }
 .lec-nt-controls input[type=range] { accent-color: var(--accent); }
 .lec-nt-controls button { border: 1px solid var(--hairline); background: var(--paper); padding: 3px 10px; cursor: pointer; }
-.lec-nt-cands { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-.lec-nt-cands button { display: flex; align-items: center; gap: 10px; width: 100%; border: 1px solid var(--hairline); background: var(--paper); padding: 6px 10px; cursor: pointer; text-align: left; }
+.lec-nt-cands { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.lec-nt-cands button { display: flex; align-items: center; gap: 10px; width: 100%; border: 1px solid var(--hairline); background: var(--paper); padding: 3px 10px; cursor: pointer; text-align: left; }
 .lec-nt-cands button:hover { border-color: var(--accent); }
 .lec-nt-tok { flex: 0 0 30%; font-weight: 700; }
 .lec-nt-bar { flex: 1; height: 8px; background: var(--hairline); }
@@ -119,7 +122,8 @@
 .lec-pat-tabs button.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .lec-pat-panes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .lec-pat-lbl { font-size: 0.7em; color: var(--faint); letter-spacing: 0.1em; margin-bottom: 4px; }
-.lec-pat-prompt pre, .lec-pat-output pre { white-space: pre-wrap; font-family: ui-monospace, Menlo, Consolas, var(--font-pretendard), monospace; font-size: 0.82em; line-height: 1.6; background: var(--paper); border: 1px solid var(--hairline); padding: 8px 10px; min-height: 7em; }
+/* min-height는 짧은 쪽 패널이 빈 칸으로 보이지 않을 만큼만 — 키우면 슬라이드가 16:9를 넘는다. */
+.lec-pat-prompt pre, .lec-pat-output pre { white-space: pre-wrap; font-family: ui-monospace, Menlo, Consolas, var(--font-pretendard), monospace; font-size: 0.82em; line-height: 1.6; background: var(--paper); border: 1px solid var(--hairline); padding: 8px 10px; min-height: 5em; }
 .lec-pat-json { color: var(--accent); }
 .lec-pat-note { margin-top: 0.7em; font-size: 0.82em; color: var(--muted); border-left: 2px solid var(--accent); padding-left: 0.7em; }
 
@@ -146,6 +150,19 @@
 /* ── 조작 힌트 / 좁은 화면 안내 ── */
 .lec-hint { position: fixed; top: 14px; left: 50%; transform: translateX(-50%); z-index: 30; font-size: 12px; color: var(--faint); background: var(--paper); padding: 4px 10px; border: 1px solid var(--hairline); animation: lec-fade 0.4s ease 5s forwards; }
 @keyframes lec-fade { to { opacity: 0; visibility: hidden; } }
+
+/* 키보드 힌트가 기본, 터치 기기에서만 스와이프 힌트로 바꾼다 */
+.lec-hint-touch { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .lec-hint-key { display: none; }
+  .lec-hint-touch { display: inline; }
+}
+
+/* 가로 스와이프를 브라우저의 뒤로가기 제스처에 뺏기지 않게 한다.
+   세로 스크롤과 확대는 그대로 두어 손으로 키워 보는 걸 막지 않는다. */
+@media (hover: none) and (pointer: coarse) {
+  .lec-deck { touch-action: pan-y pinch-zoom; -webkit-tap-highlight-color: transparent; }
+}
 
 .lec-portrait-note { display: none; }
 @media (max-aspect-ratio: 1/1), (max-width: 720px) {

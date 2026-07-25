@@ -1,8 +1,21 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Part, Slide as SlideT } from "@/data/lecture";
 import Slide from "./Slide";
 import DeckProgress from "./DeckProgress";
+
+/* 터치 조작 기준값 */
+const SWIPE_MIN_PX = 30;   // 이만큼 가로로 움직여야 스와이프로 본다
+const TAP_MAX_PX = 10;     // 이보다 적게 움직이면 탭으로 본다
+const TAP_ZONE = 0.25;     // 화면 좌/우 25%가 이전/다음 탭 영역
+
+/* 덱이 조작을 가로채면 안 되는 곳:
+   - 데모·버튼·입력요소 — 후보 버튼, temperature 슬라이더, 패턴 탭이 그대로 동작해야 한다
+   - 세로 화면 안내 — 덮여 있는 동안 뒤에서 슬라이드가 넘어가면 안 된다 */
+function isInteractive(target: EventTarget | null) {
+  return target instanceof Element &&
+    !!target.closest(".lec-demo, .lec-portrait-note, button, a, input, select, textarea");
+}
 
 export default function LectureDeck({ slides, parts }: { slides: SlideT[]; parts: Part[] }) {
   const [cur, setCur] = useState(0);
@@ -36,12 +49,50 @@ export default function LectureDeck({ slides, parts }: { slides: SlideT[]; parts
     return () => window.removeEventListener("keydown", onKey);
   }, [advance, back, go, total, slides]);
 
+  /* ── 터치 조작: 좌우 스와이프 + 가장자리 탭 ──
+     터치 기기에서만 켠다. 데스크톱 마우스 클릭은 지금처럼 아무 일도 하지 않는다. */
+  const touch = useRef<{ x: number; y: number } | null>(null);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    if (isInteractive(e.target)) { touch.current = null; return; }
+    const t = e.touches[0];
+    touch.current = { x: t.clientX, y: t.clientY };
+  }, []);
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    const start = touch.current;
+    touch.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+
+    // 가로 성분이 세로보다 커야 스와이프 — 세로 스크롤·튕김과 구분한다.
+    if (Math.abs(dx) >= SWIPE_MIN_PX && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) advance(); else back();
+      return;
+    }
+    // 거의 안 움직였으면 탭 — 좌/우 가장자리에서만 반응하고 가운데는 무시한다.
+    if (Math.abs(dx) <= TAP_MAX_PX && Math.abs(dy) <= TAP_MAX_PX) {
+      const ratio = t.clientX / window.innerWidth;
+      if (ratio <= TAP_ZONE) back();
+      else if (ratio >= 1 - TAP_ZONE) advance();
+    }
+  }, [advance, back]);
+
   return (
-    <div className="lec-deck">
+    <div className="lec-deck" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <div className="lec-portrait-note">
-        가로가 넓은 화면에서 <b>←/→</b> 키로 발표하세요.
+        화면을 가로로 돌려주세요.
+        <br />
+        <b>좌우 스와이프</b> 또는 <b>화면 가장자리 탭</b>으로 넘기고,
+        키보드에서는 <b>←/→</b> 키를 씁니다.
       </div>
-      <div className="lec-hint lec-mono">← → 이동</div>
+      {/* 조작 힌트: 기기에 따라 한 쪽만 보인다(lecture.css) */}
+      <div className="lec-hint lec-mono">
+        <span className="lec-hint-key">← → 이동</span>
+        <span className="lec-hint-touch">좌우 스와이프 · 가장자리 탭</span>
+      </div>
       <div className="lec-stage">
         {slides.map((s, i) => (
           <Slide key={s.id} slide={s} index={i} total={total} active={i === cur} activeStep={i === cur ? step : 0} />
