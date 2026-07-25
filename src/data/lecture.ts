@@ -57,12 +57,11 @@ export const slides: Slide[] = [
     eyebrow: "PART 1 · 동작 원리",
     kind: "content",
     demo: "nextToken",
-    steps: 3,
+    steps: 2,
     title: "LLM은 '다음 단어'를 확률로 고른다",
     body: [
       "토큰(token) — 모델은 글자가 아니라 토큰 단위로 문장을 쪼개 읽는다",
-      "확률분포 — 다음에 올 토큰마다 확률을 매기고 그중 하나를 골라 이어붙인다",
-      "temperature · top-p — 그 선택의 무작위성을 조절한다. 컨텍스트 윈도우(context window)를 벗어난 앞부분은 아예 보이지 않는다",
+      "확률분포 — 다음에 올 토큰마다 확률을 매기고 그중 하나를 골라 이어붙인다. temperature · top-p로 그 무작위성을 조절하며, 컨텍스트 윈도우(context window)를 벗어난 앞부분은 아예 보이지 않는다",
     ],
   },
   {

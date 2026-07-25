@@ -36,7 +36,7 @@ export function nextTokenCandidates(prefix: string, temperature: number): TokenC
   return applyTemperature(base, temperature);
 }
 
-/* ── PromptPattern (s05–s06) ── */
+/* ── PromptPattern (s05 · s07) ── */
 export type PatternKey = "zero" | "few" | "cot" | "structured";
 export type PatternSample = { key: PatternKey; label: string; prompt: string; output: string[]; structured?: boolean; note?: string };
 
@@ -81,7 +81,7 @@ export const promptPatterns: PatternSample[] = [
   },
 ];
 
-/* ── RagPipeline (s08) ── */
+/* ── RagPipeline (s10) ── */
 export type RagStageRow = { stage: string; en: string; withRag: string; withoutRag: string };
 
 export const ragStageRows: RagStageRow[] = [
