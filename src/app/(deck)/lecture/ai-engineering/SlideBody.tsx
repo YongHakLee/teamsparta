@@ -2,11 +2,8 @@ import type { Slide } from "@/data/lecture";
 import NextTokenDemo from "./demos/NextTokenDemo";
 import PromptPatternDemo from "./demos/PromptPatternDemo";
 import RagPipelineDemo from "./demos/RagPipelineDemo";
-import LlmOpsMetricsDemo from "./demos/LlmOpsMetricsDemo";
-import LlmOpsCanaryDemo from "./demos/LlmOpsCanaryDemo";
-import EvalRunTable from "./demos/EvalRunTable";
 import ComparisonTable from "./demos/ComparisonTable";
-import { searchQualityTable } from "./demos/demoData";
+import { antiPatternTable, embeddingTable, ragFailureTable, searchQualityTable } from "./demos/demoData";
 
 /* activeStep: 0이면 아무 fragment도 안 열림, n이면 data-frag<=n 까지 열림 */
 export default function SlideBody({ slide, activeStep }: { slide: Slide; activeStep: number }) {
@@ -37,14 +34,12 @@ export default function SlideBody({ slide, activeStep }: { slide: Slide; activeS
       )}
       {/* 데모 슬롯: slide.demo 별 컴포넌트 연결 */}
       {slide.demo === "nextToken" && <NextTokenDemo />}
-      {slide.demo === "promptPattern" && (
-        <PromptPatternDemo variant={slide.id === "s06" ? "structured" : "patterns"} />
-      )}
+      {slide.demo === "promptPattern" && <PromptPatternDemo variant={slide.demoVariant ?? "patterns"} />}
       {slide.demo === "ragPipeline" && <RagPipelineDemo activeStep={activeStep} />}
       {slide.demo === "searchQuality" && <ComparisonTable spec={searchQualityTable} activeStep={activeStep} />}
-      {slide.demo === "llmOpsMetrics" && <LlmOpsMetricsDemo />}
-      {slide.demo === "llmOpsCanary" && <LlmOpsCanaryDemo />}
-      {slide.demo === "evalRun" && <EvalRunTable />}
+      {slide.demo === "antiPattern" && <ComparisonTable spec={antiPatternTable} activeStep={activeStep} />}
+      {slide.demo === "embedding" && <ComparisonTable spec={embeddingTable} activeStep={activeStep} />}
+      {slide.demo === "ragFailure" && <ComparisonTable spec={ragFailureTable} activeStep={activeStep} />}
     </>
   );
 }

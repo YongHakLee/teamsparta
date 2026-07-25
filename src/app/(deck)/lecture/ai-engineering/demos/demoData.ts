@@ -186,32 +186,3 @@ export const ragFailureTable: TableSpec = {
   ],
   note: "고칠 수 있으려면 어느 단계가 깨졌는지 나눠 봐야 한다. 검색 지표(recall@k)와 생성 지표(faithfulness)를 따로 재면 검색이 문제인지 생성이 문제인지 바로 갈린다.",
 };
-
-/* ── LlmOpsMetrics (s10) / LlmOpsCanary (s11) ── */
-export type Metric = { label: string; value: string; spark: number[]; desc: string };
-
-export const opsMetrics: Metric[] = [
-  { label: "지연(latency) p95", value: "1.8s", spark: [1.4, 1.6, 1.5, 1.9, 1.7, 1.8], desc: "상위 5% 느린 요청 기준선. 평균이 가리는 최악 경험을 본다." },
-  { label: "요청당 비용", value: "$0.012", spark: [0.010, 0.011, 0.012, 0.012, 0.013, 0.012], desc: "비용은 토큰 수에 비례한다." },
-  { label: "평균 토큰(token)", value: "1,240", spark: [1100, 1180, 1200, 1260, 1230, 1240], desc: "입력+출력 토큰. 곧 비용." },
-  { label: "품질 점수", value: "92", spark: [90, 91, 89, 92, 93, 92], desc: "사람/자동 평가로 수치화한 답의 유용성." },
-];
-
-export const canarySteps = [5, 25, 50, 100] as const;
-
-/* ── EvalRunTable (s12) ── */
-export type EvalRow = { q: string; expected: string; got: string; score: number; pass: boolean };
-
-export const evalRows: EvalRow[] = [
-  { q: "환불 기간은?", expected: "14일 이내 미개봉", got: "14일 이내, 미개봉 상품", score: 0.95, pass: true },
-  { q: "교환 기간은?", expected: "수령 후 7일 이내", got: "보통 2주 정도", score: 0.40, pass: false },
-  { q: "배송비 부담은?", expected: "단순 변심 시 고객 부담", got: "단순 변심 시 고객이 왕복 배송비 부담", score: 0.92, pass: true },
-];
-
-/* 신버전 비율이 높아질수록(불량 신버전 가정) 에러율↑·품질↓. 40%↑에서 위험. */
-export function canaryOutcome(canaryPct: number): { errorRate: number; quality: number; danger: boolean } {
-  const p = Math.max(0, Math.min(100, canaryPct)) / 100;
-  const errorRate = +(0.5 + p * p * 11).toFixed(1); // 0.5% → 최대 ~11.5%
-  const quality = Math.round(92 - p * 22);           // 92 → 70
-  return { errorRate, quality, danger: errorRate > 3 };
-}
