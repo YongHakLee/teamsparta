@@ -45,6 +45,7 @@ CLAUDE.md
 AGENTS.md
 docs/*
 !docs/lecture/
+!docs/운영메모.md
 prompt.md
 .superpowers/
 
