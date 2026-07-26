@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // demo/는 자체 eslint 설정을 가진 독립 앱이라 루트 린트에서 제외한다
+    "demo/**",
   ]),
   {
     rules: {
