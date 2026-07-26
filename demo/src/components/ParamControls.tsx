@@ -1,8 +1,18 @@
 "use client";
 
+import { MAX_TOKENS_CAP } from "@/lib/limits";
 import type { EffortLevel, GenerateRequest } from "@/lib/wire";
 
-const EFFORTS: EffortLevel[] = ["low", "medium", "high", "xhigh", "max"];
+// xhigh·max는 뺐다 — claude-opus-5에서 이 두 단계는 사고 예산이 커서(claude-api
+// 스킬: "xhigh/max에서는 max_tokens를 64K 이상으로 두라") 이 시연의 토큰 상한
+// (MAX_TOKENS_CAP)에서는 사고에 예산을 다 쓰고 응답이 빈 채로 끝날 가능성이 크다.
+const EFFORTS: EffortLevel[] = ["low", "medium", "high"];
+
+// opus-5로 전환할 때 max_tokens를 이 값 이상으로 올린다. opus-5는 thinking을
+// 생략해도 adaptive thinking이 기본으로 돌고 max_tokens가 사고+응답 합계에 걸리는
+// 하드 상한이라(claude-api 스킬 확인 사실), 프리셋에서 넘어온 낮은 값(64~512)을
+// 그대로 두면 "정상 응답이 나온다" 시연이 빈 출력으로 끝날 수 있다.
+const OPUS_SAFE_MAX_TOKENS = MAX_TOKENS_CAP;
 
 export default function ParamControls({
   value,
@@ -35,7 +45,15 @@ export default function ParamControls({
               void temperature;
               void top_p;
               void top_k;
-              onChange({ ...rest, model, effort: "medium" });
+              onChange({
+                ...rest,
+                model,
+                effort: "medium",
+                max_tokens: Math.max(
+                  rest.max_tokens ?? 0,
+                  OPUS_SAFE_MAX_TOKENS,
+                ),
+              });
             } else {
               const { effort, ...rest } = value;
               void effort;
@@ -132,7 +150,7 @@ export default function ParamControls({
       <Slider
         label="MAX_TOKENS"
         min={16}
-        max={2048}
+        max={MAX_TOKENS_CAP}
         step={16}
         value={value.max_tokens ?? 512}
         onChange={(max_tokens) => set({ max_tokens })}

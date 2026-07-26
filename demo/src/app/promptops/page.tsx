@@ -220,7 +220,7 @@ function reduceFrame(prev: RunState, f: SseFrame): RunState {
 
 function VariantGrid({ variants }: { variants: VariantRun[] }) {
   return (
-    <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${Math.min(variants.length, 3)}, minmax(0, 1fr))` }}>
+    <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${variants.length <= 3 ? variants.length : 2}, minmax(0, 1fr))` }}>
       {variants.map((v) => {
         const totalOut = v.runs.reduce(
           (a, r) => a + (r.usage?.output_tokens ?? 0),

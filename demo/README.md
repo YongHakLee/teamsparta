@@ -51,8 +51,14 @@ npm run build:snippets && npm run typecheck && npm run lint && npm run test
       비결정적이라 `JSON 요청 — 형식 강제 없이`도 1회차에 통과할 수 있다 —
       그러면 그것도 정상이다
 - [ ] 모델을 `claude-opus-5`로 바꾸고 temperature 강제 전송 → **`HTTP 400 · BadRequestError`가 뜬다**
-- [ ] 강제 전송을 끄고 다시 실행 → **정상 응답이 나온다** (막다른 길이 아님을 확인)
-- [ ] 각 프리셋에서 `코드` 탭에 서로 다른 스니펫이 보인다
+- [ ] 강제 전송을 끄고 다시 실행 → **정상 응답이 나온다** (막다른 길이 아님을 확인).
+      **무작위성** 프리셋(변형의 `max_tokens`가 64)에서는 하지 마라 — opus-5는 thinking이
+      기본으로 돌고 max_tokens가 사고+응답 합계에 걸리는 상한이라 빈 출력으로 끝날 수
+      있다. 모델 전환은 opus-5로 바꾸면 `max_tokens`가 자동으로 올라가는 지점(왼쪽
+      조작부의 MAX_TOKENS 슬라이더, 또는 `요청` 탭 JSON)에서 확인하고, 프리셋은 **지시
+      방법**처럼 max_tokens가 애초에 256 이상인 프리셋에서 하는 편이 안전하다
+- [ ] 프리셋을 바꾸면 `코드` 탭의 스니펫과 출처 경로가 바뀐다 — 단, **안티패턴**은
+      **무작위성**과 같은 `sampling` 스니펫을 쓴다(프리셋 4개에 서로 다른 스니펫은 3개)
 - [ ] `src/data/fixtures.json`에 12개 항목이 들어 있다 (무작위성 2 · 지시 방법 3 ·
       안티패턴 4 · 구조화 출력 3)
 - [ ] `.env.local`의 키를 망가뜨린 상태에서 변형 버튼을 눌러 선택한 뒤 `실행`으로
@@ -71,11 +77,10 @@ npm run build:snippets && npm run typecheck && npm run lint && npm run test
 
 ### 배포 후 확인
 
-에러 프레임의 이름은 `err.constructor?.name`으로 잡습니다. Vercel 프로덕션
-번들 최소화(minification)로 클래스 이름이 뭉개질 가능성이 있으므로, 첫 배포
-후 `claude-opus-5` + temperature 강제 전송으로 **화면에 `BadRequestError`가
-그대로 나오는지 확인**하세요. 뭉개져 있으면(`e`, `t` 같은 한 글자 이름 등)
-`err.constructor?.name` 대신 status → 이름 맵으로 바꿔야 합니다.
+에러 프레임의 이름은 `instanceof Anthropic.BadRequestError` 같은 체인으로
+잡습니다(`route.ts`의 `toErrorFrame`). Vercel 프로덕션 번들 최소화로 클래스
+이름 문자열이 뭉개져도 `instanceof` 판정 자체는 영향받지 않으므로 별도 확인
+절차는 필요 없습니다.
 
 ## 강의 종료 후
 

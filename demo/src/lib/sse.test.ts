@@ -88,4 +88,57 @@ describe("streamGenerate", () => {
     expect(onFrame.mock.calls[0]?.[0]).toEqual({ type: "delta", text: "가" });
     expect(onFrame.mock.calls[1]?.[0]).toEqual({ type: "delta", text: "나" });
   });
+
+  it("200 응답이지만 SSE 프레임이 하나도 없으면 NoFrames 에러 프레임을 정확히 한 번 내보낸다", async () => {
+    const encoder = new TextEncoder();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        // Vercel 플랫폼 에러 페이지 등 SSE가 아닌 본문을 흉내낸다.
+        controller.enqueue(
+          encoder.encode("<html><body>502 Bad Gateway</body></html>"),
+        );
+        controller.close();
+      },
+    });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(new Response(body, { status: 200 })),
+    );
+    const onFrame = vi.fn<(f: SseFrame) => void>();
+
+    await streamGenerate({ model: "claude-haiku-4-5", user: "hi" }, onFrame);
+
+    expect(onFrame).toHaveBeenCalledTimes(1);
+    expect(onFrame).toHaveBeenCalledWith({
+      type: "error",
+      status: 200,
+      name: "NoFrames",
+      message: expect.any(String),
+    });
+  });
+
+  it("정상 SSE(delta+done)에서는 NoFrames가 나오지 않는다", async () => {
+    const encoder = new TextEncoder();
+    const body = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(
+          encoder.encode('data: {"type":"delta","text":"가"}\n\n'),
+        );
+        controller.enqueue(
+          encoder.encode(
+            'data: {"type":"done","stop_reason":"end_turn","usage":{"input_tokens":1,"output_tokens":1}}\n\n',
+          ),
+        );
+        controller.close();
+      },
+    });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(body)));
+    const onFrame = vi.fn<(f: SseFrame) => void>();
+
+    await streamGenerate({ model: "claude-haiku-4-5", user: "hi" }, onFrame);
+
+    expect(onFrame).not.toHaveBeenCalledWith(
+      expect.objectContaining({ name: "NoFrames" }),
+    );
+  });
 });

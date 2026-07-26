@@ -117,7 +117,7 @@ export const PRESETS: Preset[] = [
     id: "antipattern",
     slide: "s06",
     label: "안티패턴",
-    desc: "나쁜 프롬프트와 고친 프롬프트를 나란히 실행합니다. 덱의 네 가지 안티패턴 중 하나를 고르세요.",
+    desc: "덱의 네 가지 중 두 가지(① 모호한 지시 · ③ 한 번에 여러 작업)를 나쁜 예/고친 예로 나란히 실행합니다.",
     snippetId: "sampling",
     snippetCaption: "프롬프트 문자열만 다를 뿐, 호출 코드는 같습니다.",
     variants: [

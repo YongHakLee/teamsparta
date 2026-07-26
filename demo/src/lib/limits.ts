@@ -7,7 +7,12 @@
 export const ALLOWED_MODELS = ["claude-haiku-4-5", "claude-opus-5"] as const;
 export type AllowedModel = (typeof ALLOWED_MODELS)[number];
 
-export const MAX_TOKENS_CAP = 2048;
+// claude-opus-5는 thinking을 생략해도 adaptive thinking이 기본으로 돌고,
+// max_tokens는 사고+응답 합계에 걸리는 하드 상한이다(claude-api 스킬 확인 사실).
+// 2048로는 사고에 토큰을 다 쓰고 응답이 비어 stop_reason:"max_tokens"로 끝날 수
+// 있어 4096으로 올렸다 — haiku 프리셋들의 max_tokens(64~512)는 그대로 이 상한
+// 아래이므로 영향 없다.
+export const MAX_TOKENS_CAP = 4096;
 export const MAX_PROMPT_CHARS = 8000;
 
 export class LimitError extends Error {
