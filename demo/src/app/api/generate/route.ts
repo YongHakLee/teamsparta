@@ -21,7 +21,8 @@ function toErrorFrame(err: unknown): SseFrame {
     return {
       type: "error",
       status: err.status ?? 500,
-      name: err.name,
+      // SDK가 에러 서브클래스에서 .name을 덮어쓰지 않아 생성자 이름으로 서브클래스를 식별한다.
+      name: err.constructor?.name ?? err.name,
       message: err.message,
     };
   }
