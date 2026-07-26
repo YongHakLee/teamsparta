@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Part, Slide } from "@/data/lecture";
 
 export type Group = { part?: Part; items: { slide: Slide; index: number }[] };
@@ -29,21 +29,32 @@ export default function SlideOverview({
 }) {
   const groups = groupSlides(slides, parts);
   const cards = useRef<(HTMLButtonElement | null)[]>([]);
+  /* 커서를 따로 그리지 않고 DOM 포커스로 표현한다 —
+     포커스 링이 곧 커서이고, Tab으로 옮긴 위치와도 어긋나지 않는다. */
+  const [cursor, setCursor] = useState(current);
 
   /* 열자마자 현재 슬라이드 카드에 포커스 — 포커스 링이 곧 "지금 여기" 표시다. */
   useEffect(() => {
-    cards.current[current]?.focus();
-  }, [current]);
+    cards.current[cursor]?.focus();
+  }, [cursor]);
 
   /* Esc는 여기서 받는다. 오버뷰가 열려 있는 동안 LectureDeck의 키 핸들러는
      아무것도 하지 않고 빠져나가기 때문이다. */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { e.preventDefault(); onClose(); }
+      if (e.key === "Escape") { e.preventDefault(); onClose(); return; }
+      /* 양 끝에서 멈춘다. 순환시키면 지금 어디쯤인지 감이 사라진다. */
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setCursor((c) => Math.min(slides.length - 1, c + 1));
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setCursor((c) => Math.max(0, c - 1));
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, slides.length]);
 
   return (
     <div
