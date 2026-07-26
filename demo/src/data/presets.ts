@@ -117,22 +117,19 @@ export const PRESETS: Preset[] = [
         },
       },
       {
-        label: "④ 부정형만 지시 — 나쁜 예",
+        label: "③ 한 번에 여러 작업 — 나쁜 예",
         request: {
           model: "claude-haiku-4-5",
-          system: "틀린 말 하지 마.",
-          user: "스파르타전자 2026년형 노이즈캔슬링 이어폰의 보증 기간은?",
+          user: `이 리뷰를 요약하고 영어로 번역하고 키워드도 뽑아줘.\n리뷰: "${REVIEW}"`,
           temperature: 0,
           max_tokens: 256,
         },
       },
       {
-        label: "④ 부정형만 지시 — 고친 예",
+        label: "③ 한 번에 여러 작업 — 고친 예",
         request: {
           model: "claude-haiku-4-5",
-          system:
-            "제공된 문서에 근거가 없으면 '문서에 없음'이라고만 답해줘. 추측하지 말 것.",
-          user: "스파르타전자 2026년형 노이즈캔슬링 이어폰의 보증 기간은?",
+          user: `다음 리뷰를 처리해줘. 세 항목을 각각 라벨을 붙여 모두 출력해.\n1) 요약: 한 문장\n2) 영어 번역: 한 문장\n3) 키워드: 3개, 쉼표로 구분\n리뷰: "${REVIEW}"`,
           temperature: 0,
           max_tokens: 256,
         },
