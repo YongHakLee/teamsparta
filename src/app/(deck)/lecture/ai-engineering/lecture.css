@@ -173,3 +173,63 @@
 @media (prefers-reduced-motion: reduce) {
   .lec-hint { animation: none; }
 }
+
+/* ── 전체 슬라이드 오버뷰 ──
+   z-index 50: 세로 화면 안내(.lec-portrait-note, 60)보다 낮아야 한다. */
+.lec-overview {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  /* grid+place-items로 가운데 정렬하면 내용이 넘칠 때 위가 잘린다.
+     flex + margin:auto는 넘쳐도 스크롤로 닿을 수 있다. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 3vh 3vw;
+  animation: lec-ov-in 0.18s ease;
+}
+@keyframes lec-ov-in { from { opacity: 0; transform: scale(0.99); } }
+
+.lec-ov-grid {
+  margin: auto;
+  width: min(1100px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+.lec-ov-part {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+  margin-bottom: 0.5rem;
+}
+.lec-ov-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.lec-ov-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  min-height: 76px;
+  padding: 10px 12px;
+  border: 1px solid var(--hairline);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.lec-ov-card:hover { border-color: var(--accent); }
+.lec-ov-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* 현재 슬라이드는 테두리를 굵게. padding을 1px 줄여 카드 크기를 유지한다. */
+.lec-ov-cur { border-color: var(--accent); border-width: 2px; padding: 9px 11px; }
+.lec-ov-num { font-size: 11px; letter-spacing: 0.1em; color: var(--faint); }
+.lec-ov-title { font-size: 14px; line-height: 1.4; font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) { .lec-overview { animation: none; } }
