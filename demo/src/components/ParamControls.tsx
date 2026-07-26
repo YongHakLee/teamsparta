@@ -202,6 +202,7 @@ function Slider({
           step={step}
           value={value ?? min}
           onChange={(e) => onChange(Number(e.target.value))}
+          aria-label={label}
         />
         {optional && (
           <button
