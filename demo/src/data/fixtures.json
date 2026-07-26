@@ -1,0 +1,74 @@
+[
+  {
+    "presetId": "randomness",
+    "variantLabel": "temperature 0",
+    "text": "자유로운 움직임과 선명한 음질로 당신의 일상을 더욱 풍요롭게 만드는 무선 이어폰입니다.",
+    "usage": { "input_tokens": 43, "output_tokens": 56 }
+  },
+  {
+    "presetId": "randomness",
+    "variantLabel": "temperature 1.0",
+    "text": "뛰어난 음질과 편안한 착용감으로 당신의 일상을 더욱 풍요롭게 만드는 무선 이어폰입니다.",
+    "usage": { "input_tokens": 43, "output_tokens": 58 }
+  },
+  {
+    "presetId": "patterns",
+    "variantLabel": "Zero-shot",
+    "text": "# 감성 분류 결과\n\n**혼합 감성 (Mixed Sentiment)**\n\n## 분석:\n\n| 요소 | 감성 | 내용 |\n|------|------|------|\n| **긍정** | ⭐⭐⭐ | 배송이 빨랐다 |\n| **부정** | ⭐⭐ | 품질이 별로였다 |\n\n## 종합 평가:\n\n**전체적으로는 부정적 감성**에 가깝습니다.\n\n- \"하지만(but)\"의 의미로 사용된 \"지만\"이 뒤의 부정적 내용을 강조\n- 품질 문제가 배송 장점을 상쇄\n- 고객 만족도는 낮을 것으로 예상\n\n**별점 추정: ⭐⭐ (2/5점)**",
+    "usage": { "input_tokens": 54, "output_tokens": 255 }
+  },
+  {
+    "presetId": "patterns",
+    "variantLabel": "Few-shot",
+    "text": "# 리뷰 분석\n\n**분류: 부정**\n\n**이유:**\n- 긍정 요소: \"배송은 빨랐지만\" (배송 속도 만족)\n- 부정 요소: \"품질이 별로였다\" (핵심 상품 품질 불만족)\n\n\"하지만(지만)\"이라는 역접 표현으로 앞의 긍정 내용을 부정하고, 가장 중요한 **상품 품질에 대한 불만족**을 강조하고 있으므로 **부정 리뷰**입니다.",
+    "usage": { "input_tokens": 65, "output_tokens": 178 }
+  },
+  {
+    "presetId": "patterns",
+    "variantLabel": "CoT",
+    "text": "# 리뷰 분류 분석\n\n## 1단계: 리뷰 내용 파악\n- **긍정 요소**: 배송이 빨랐다\n- **부정 요소**: 품질이 별로였다\n\n## 2단계: 각 요소의 중요도 평가\n- 배송 속도: 만족 (보조적 요소)\n- 제품 품질: 불만족 (핵심 요소)\n\n## 3단계: 종합 평가\n제품의 **핵심 가치인 품질에 대한 불만**이 배송 만족도보다 더 중요하므로, 전체적으로는 **부정적 리뷰**입니다.\n\n## 📊 최종 분류\n\n| 분류 | 결과 |\n|------|------|\n| **전체 평가** | ⭐ 부정적 |\n| **감정 톤** | 실망감 |\n| **주요 불만** | 제품 품질 |\n| **긍정 요소** | 배송 속도 |\n\n---\n\n**결론**: 이 리뷰는 **부정적 리뷰**로 분류되며, 제품 품질 개선이 필요함을 시사합니다.",
+    "usage": { "input_tokens": 61, "output_tokens": 370 }
+  },
+  {
+    "presetId": "antipattern",
+    "variantLabel": "① 모호한 지시 — 나쁜 예",
+    "text": "# 리뷰 정리\n\n**긍정 평가**\n- 배송 속도가 빠름\n\n**부정 평가**\n- 제품 품질이 낮음\n\n**종합 평가**\n배송은 만족스러웠으나 제품 품질에 대한 불만이 있는 상태\n\n---\n\n더 자세한 정리가 필요하면 알려주세요!",
+    "usage": { "input_tokens": 49, "output_tokens": 120 }
+  },
+  {
+    "presetId": "antipattern",
+    "variantLabel": "① 모호한 지시 — 고친 예",
+    "text": "부정",
+    "usage": { "input_tokens": 74, "output_tokens": 6 }
+  },
+  {
+    "presetId": "antipattern",
+    "variantLabel": "③ 한 번에 여러 작업 — 나쁜 예",
+    "text": "# 리뷰 요약 및 분석\n\n## 📝 요약\n배송 속도는 만족스러웠으나 제품 품질이 기대에 미치지 못했다는 내용입니다.\n\n## 🌐 영어 번역\n\"The delivery was fast, but the product quality was poor.\"\n\n## 🔑 키워드\n- **배송** (Delivery/Shipping)\n- **빠름** (Fast/Quick)\n- **품질** (Quality)\n- **불만족** (Dissatisfaction/Poor)\n\n---\n\n### 추가 분석\n| 항목 | 평가 |\n|------|------|\n| 배송 속도 | ⭐⭐⭐⭐ (긍정) |\n| 제품 품질 | ⭐⭐ (부정) |\n| 전체 만족도 | ⭐⭐⭐ (중간",
+    "usage": { "input_tokens": 69, "output_tokens": 256 }
+  },
+  {
+    "presetId": "antipattern",
+    "variantLabel": "③ 한 번에 여러 작업 — 고친 예",
+    "text": "# 리뷰 처리 결과\n\n1) **요약:** 빠른 배송에도 불구하고 제품의 품질이 만족스럽지 못했다.\n\n2) **영어 번역:** The delivery was fast, but the product quality was disappointing.\n\n3) **키워드:** 빠른 배송, 낮은 품질, 불만족",
+    "usage": { "input_tokens": 124, "output_tokens": 107 }
+  },
+  {
+    "presetId": "structured",
+    "variantLabel": "자유 텍스트",
+    "text": "# 리뷰 감성 분석\n\n이 리뷰는 **부정적(Negative)** 감성입니다.\n\n## 분석 이유:\n\n| 요소 | 내용 | 감성 |\n|------|------|------|\n| **긍정** | 배송이 빨랐다 | ✅ 긍정 |\n| **부정** | 품질이 별로였다 | ❌ 부정 |\n| **전체 톤** | \"하지만(but)\" 구조 | 부정 강조 |\n\n## 해석:\n- 배송 속도는 만족하지만, **품질 문제가 더 중요한 불만**\n- \"별로였다\"는 표현으로 실망감 드러냄\n- 전반적으로 **제품에 대한 불만족**이 우선\n\n**결론**: 부정적 리",
+    "usage": { "input_tokens": 52, "output_tokens": 256 }
+  },
+  {
+    "presetId": "structured",
+    "variantLabel": "JSON 스키마 강제",
+    "text": "{\"sentiment\": \"negative\", \"confidence\": 0.85, \"aspects\": {\"배송\": \"positive\", \"품질\": \"negative\"}}",
+    "usage": { "input_tokens": 396, "output_tokens": 35 }
+  },
+  {
+    "presetId": "structured",
+    "variantLabel": "JSON 요청 — 형식 강제 없이",
+    "text": "```json\n{\n  \"review\": \"배송은 빨랐지만 품질이 별로였다\",\n  \"analysis\": {\n    \"positive_aspects\": [\n      {\n        \"category\": \"배송\",\n        \"sentiment\": \"긍정\",\n        \"description\": \"빠른 배송\"\n      }\n    ],\n    \"negative_aspects\": [\n      {\n        \"category\": \"품질\",\n        \"sentiment\": \"부정\",\n        \"description\": \"낮은 품질\"\n      }\n    ],\n    \"overall_sentiment\": \"부정\",\n    \"sentiment_score\": 3.5,\n    \"key_topics\": [\"배송\", \"품질\"],\n    \"recommendation\": \"제품 품질 개선 필요\"\n  }\n}\n```\n\n**분석 요약:**\n- **긍정**: 배송 속도가 빠름\n- **부정**: 제품 품질이 낮음\n- **전체 평가**: 부정적 (품질 문제가 배송 장점을 상쇄)\n\n— 재요청 1회차 —\n\n```json\n{\n  \"review\": \"배송은 빨랐지만 품질이 별로였다\",\n  \"analysis\": {\n    \"positive_aspects\": [\n      {\n        \"category\": \"배송\",\n        \"sentiment\": \"긍정\",\n        \"description\": \"빠른 배송\"\n      }\n    ],\n    \"negative_aspects\": [\n      {\n        \"category\": \"품질\",\n        \"sentiment\": \"부정\",\n        \"description\": \"낮은 품질\"\n      }\n    ],\n    \"overall_sentiment\": \"부정\",\n    \"sentiment_score\": 3.5,\n    \"key_topics\": [\"배송\", \"품질\"],\n    \"recommendation\": \"제품 품질 개선 필요\"\n  }\n}\n```\n\n— 재요청 2회차 —\n\n```json\n{\n  \"review\": \"배송은 빨랐지만 품질이 별로였다\",\n  \"analysis\": {\n    \"positive_aspects\": [\n      {\n        \"category\": \"배송\",\n        \"sentiment\": \"긍정\",\n        \"description\": \"빠른 배송\"\n      }\n    ],\n    \"negative_aspects\": [\n      {\n        \"category\": \"품질\",\n        \"sentiment\": \"부정\",\n        \"description\": \"낮은 품질\"\n      }\n    ],\n    \"overall_sentiment\": \"부정\",\n    \"sentiment_score\": 3.5,\n    \"key_topics\": [\"배송\", \"품질\"],\n    \"recommendation\": \"제품 품질 개선 필요\"\n  }\n}\n```",
+    "usage": { "input_tokens": 821, "output_tokens": 674 }
+  }
+]

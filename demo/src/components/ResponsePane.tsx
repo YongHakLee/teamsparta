@@ -7,6 +7,7 @@ export type RunState = {
   stop_reason?: string | null;
   error?: { status: number; name: string; message: string };
   validations?: { attempt: number; ok: boolean; issues: { path: string; message: string }[] }[];
+  fromFixture?: boolean;
 };
 
 export const IDLE: RunState = { status: "idle", text: "" };
@@ -67,6 +68,12 @@ export default function ResponsePane({
             </li>
           ))}
         </ul>
+      )}
+
+      {state.fromFixture && (
+        <div className="demo-mono border border-accent px-2 py-1 text-[12px] text-accent">
+          저장된 응답 — 실시간 호출이 실패해 리허설 때 기록한 응답을 보여주고 있습니다.
+        </div>
       )}
 
       <pre className="demo-mono min-h-40 overflow-x-auto whitespace-pre-wrap border border-hairline bg-paper p-3 text-[13px] leading-relaxed">
