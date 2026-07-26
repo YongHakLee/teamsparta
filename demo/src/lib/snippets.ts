@@ -1,6 +1,11 @@
 import generated from "@/data/snippets.generated.json";
 
-export type Snippet = { lang: string; source: string; html: string };
+export type Snippet = {
+  lang: string;
+  source: string;
+  html: string;
+  sourceFile: string;
+};
 
 const snippets = generated as Record<string, Snippet>;
 

@@ -4,7 +4,8 @@ import { readdir, readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { createHighlighter } from "shiki";
 
-const SRC = path.join(process.cwd(), "src");
+const ROOT = process.cwd();
+const SRC = path.join(ROOT, "src");
 const OUT = path.join(SRC, "data", "snippets.generated.json");
 
 // 반드시 존재해야 하는 스니펫. 하나라도 없으면 빌드를 실패시켜 조용한 유실을 막는다.
@@ -70,11 +71,14 @@ const snippets = {};
 
 for (const file of files) {
   const text = await readFile(file, "utf8");
+  // demo/ 기준 상대 경로로 정규화한다 — 절대 경로나 OS 의존 구분자(\)가
+  // JSON에 들어가면 캡션이 환경에 따라 달라지거나 이식성이 깨진다.
+  const sourceFile = path.relative(ROOT, file).split(path.sep).join("/");
   for (const { id, source } of extract(text, file)) {
     if (snippets[id]) {
       throw new Error(`스니펫 id 중복: ${id} (${file})`);
     }
-    snippets[id] = { lang: "ts", source };
+    snippets[id] = { lang: "ts", source, sourceFile };
   }
 }
 

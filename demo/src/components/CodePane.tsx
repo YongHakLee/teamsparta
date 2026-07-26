@@ -20,7 +20,7 @@ export default function CodePane({
         dangerouslySetInnerHTML={{ __html: snippet.html }}
       />
       <p className="text-[12px] text-faint">
-        이 코드는 <code className="demo-mono">src/lib/anthropic.ts</code>에서
+        이 코드는 <code className="demo-mono">{snippet.sourceFile}</code>에서
         빌드 시점에 추출한 실제 실행 코드입니다.
       </p>
     </div>

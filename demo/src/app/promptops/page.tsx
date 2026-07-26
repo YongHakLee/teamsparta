@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import CodePane from "@/components/CodePane";
 import DemoShell from "@/components/DemoShell";
 import ParamControls from "@/components/ParamControls";
@@ -23,7 +23,12 @@ export default function PromptOpsPage() {
   const [single, setSingle] = useState<RunState>(IDLE);
   const [variantRuns, setVariantRuns] = useState<VariantRun[] | null>(null);
 
+  // 실행 세대 카운터. 발표 중 프리셋을 갈아타거나 실행을 다시 누르면 증가시켜,
+  // 버려진 이전 실행에서 뒤늦게 도착한 프레임이 새 상태를 옛 인덱스로 건드리지 않게 한다.
+  const generationRef = useRef(0);
+
   const selectPreset = useCallback((p: Preset) => {
+    generationRef.current += 1;
     setPreset(p);
     setRequest(p.variants[0].request);
     setSingle(IDLE);
@@ -33,16 +38,19 @@ export default function PromptOpsPage() {
 
   /** 왼쪽 조작부의 현재 요청 하나만 실행한다. */
   const runSingle = useCallback(async () => {
+    const generation = ++generationRef.current;
     setSingle({ status: "running", text: "" });
     setVariantRuns(null);
     setTab("response");
-    await streamGenerate(request, (f) =>
-      setSingle((prev) => reduceFrame(prev, f)),
-    );
+    await streamGenerate(request, (f) => {
+      if (generation !== generationRef.current) return;
+      setSingle((prev) => reduceFrame(prev, f));
+    });
   }, [request]);
 
   /** 프리셋의 모든 변형을 (repeat 회수만큼) 병렬 실행해 나란히 비교한다. */
   const runPreset = useCallback(async () => {
+    const generation = ++generationRef.current;
     const initial: VariantRun[] = preset.variants.map((v) => ({
       label: v.label,
       runs: Array.from({ length: v.repeat ?? 1 }, () => ({
@@ -56,14 +64,17 @@ export default function PromptOpsPage() {
     await Promise.all(
       preset.variants.flatMap((v, vi) =>
         Array.from({ length: v.repeat ?? 1 }, (_, ri) =>
-          streamGenerate(v.request, (f) =>
+          streamGenerate(v.request, (f) => {
+            if (generation !== generationRef.current) return;
             setVariantRuns((prev) => {
               if (!prev) return prev;
+              // 방어적으로: 옛 세대 인덱스가 새 배열 범위를 벗어나면 그대로 반환.
+              if (!prev[vi] || !prev[vi].runs[ri]) return prev;
               const next = prev.map((x) => ({ ...x, runs: [...x.runs] }));
               next[vi].runs[ri] = reduceFrame(next[vi].runs[ri], f);
               return next;
-            }),
-          ),
+            });
+          }),
         ),
       ),
     );
