@@ -22,6 +22,7 @@ export default function LectureDeck({ slides, parts }: { slides: SlideT[]; parts
   const [cur, setCur] = useState(0);
   const [step, setStep] = useState(0);
   const [overviewOpen, setOverviewOpen] = useState(false);
+  const progressRef = useRef<HTMLButtonElement>(null);
   const total = slides.length;
   const steps = slides[cur]?.steps ?? 0;
 
@@ -40,12 +41,18 @@ export default function LectureDeck({ slides, parts }: { slides: SlideT[]; parts
     else if (cur > 0) go(cur - 1, slides[cur - 1]?.steps ?? 0);
   }, [cur, step, slides, go]);
 
-  const closeOverview = useCallback(() => setOverviewOpen(false), []);
+  /* 어느 경로로 닫히든 포커스를 진행바 버튼으로 되돌린다 —
+     키보드 사용자가 포커스를 잃지 않게 한다. */
+  const closeOverview = useCallback(() => {
+    setOverviewOpen(false);
+    progressRef.current?.focus();
+  }, []);
 
   /* 점프의 단계 규칙은 기존 advance/back과 같다 —
      뒤로 가면 그 장에서 마지막으로 보여준 화면 그대로, 앞으로 가면 처음부터. */
   const jumpTo = useCallback((index: number) => {
     setOverviewOpen(false);
+    progressRef.current?.focus();
     if (index === cur) return;
     go(index, index < cur ? (slides[index]?.steps ?? 0) : 0);
   }, [cur, slides, go]);
@@ -122,7 +129,13 @@ export default function LectureDeck({ slides, parts }: { slides: SlideT[]; parts
           <Slide key={s.id} slide={s} index={i} total={total} active={i === cur} activeStep={i === cur ? step : 0} />
         ))}
       </div>
-      <DeckProgress slides={slides} parts={parts} current={cur} />
+      <DeckProgress
+        ref={progressRef}
+        slides={slides}
+        parts={parts}
+        current={cur}
+        onOpen={() => setOverviewOpen(true)}
+      />
       {overviewOpen && (
         <SlideOverview
           slides={slides}
