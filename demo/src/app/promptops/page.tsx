@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import CodePane from "@/components/CodePane";
 import DemoShell from "@/components/DemoShell";
 import ParamControls from "@/components/ParamControls";
 import RequestPane from "@/components/RequestPane";
@@ -58,7 +59,12 @@ export default function PromptOpsPage() {
             tab={tab}
             onTab={setTab}
             request={<RequestPane request={request} />}
-            code={<p className="text-[13px] text-muted">Task 6에서 채웁니다.</p>}
+            code={
+              <CodePane
+                id="sampling"
+                caption="왼쪽에서 조작한 값이 이 함수를 거쳐 Messages API 파라미터가 됩니다."
+              />
+            }
             response={<ResponsePane state={run} onRun={onRun} />}
           />
         </section>
