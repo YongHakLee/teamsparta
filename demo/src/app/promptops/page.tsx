@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import DemoShell from "@/components/DemoShell";
 import ParamControls from "@/components/ParamControls";
 import RequestPane from "@/components/RequestPane";
+import ResponsePane, { IDLE, type RunState } from "@/components/ResponsePane";
 import RightPanel, { type PanelTab } from "@/components/RightPanel";
+import { streamGenerate } from "@/lib/sse";
 import type { GenerateRequest } from "@/lib/wire";
 
 const INITIAL: GenerateRequest = {
@@ -17,6 +19,32 @@ const INITIAL: GenerateRequest = {
 export default function PromptOpsPage() {
   const [request, setRequest] = useState<GenerateRequest>(INITIAL);
   const [tab, setTab] = useState<PanelTab>("request");
+  const [run, setRun] = useState<RunState>(IDLE);
+
+  const onRun = useCallback(async () => {
+    setRun({ status: "running", text: "" });
+    setTab("response");
+    await streamGenerate(request, (f) => {
+      setRun((prev) => {
+        if (f.type === "delta") {
+          return { ...prev, status: "running", text: prev.text + f.text };
+        }
+        if (f.type === "done") {
+          return {
+            ...prev,
+            status: "done",
+            usage: f.usage,
+            stop_reason: f.stop_reason,
+          };
+        }
+        return {
+          ...prev,
+          status: "error",
+          error: { status: f.status, name: f.name, message: f.message },
+        };
+      });
+    });
+  }, [request]);
 
   return (
     <DemoShell title="PROMPTOPS">
@@ -31,9 +59,7 @@ export default function PromptOpsPage() {
             onTab={setTab}
             request={<RequestPane request={request} />}
             code={<p className="text-[13px] text-muted">Task 6에서 채웁니다.</p>}
-            response={
-              <p className="text-[13px] text-muted">Task 5에서 채웁니다.</p>
-            }
+            response={<ResponsePane state={run} onRun={onRun} />}
           />
         </section>
       </div>
