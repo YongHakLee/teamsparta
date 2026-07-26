@@ -1,3 +1,5 @@
+import type { ValidationIssue } from "./validate";
+
 export type EffortLevel = "low" | "medium" | "high" | "xhigh" | "max";
 
 /** 브라우저 → /api/generate 요청 본문 */
@@ -19,6 +21,12 @@ export type GenerateRequest = {
 /** /api/generate → 브라우저 SSE 프레임 */
 export type SseFrame =
   | { type: "delta"; text: string }
+  | {
+      type: "validation";
+      attempt: number;
+      ok: boolean;
+      issues: ValidationIssue[];
+    }
   | {
       type: "done";
       stop_reason: string | null;

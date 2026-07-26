@@ -6,6 +6,7 @@ export type RunState = {
   usage?: { input_tokens: number; output_tokens: number };
   stop_reason?: string | null;
   error?: { status: number; name: string; message: string };
+  validations?: { attempt: number; ok: boolean; issues: { path: string; message: string }[] }[];
 };
 
 export const IDLE: RunState = { status: "idle", text: "" };
@@ -46,6 +47,26 @@ export default function ResponsePane({
             {state.error.message}
           </p>
         </div>
+      )}
+
+      {state.validations && state.validations.length > 0 && (
+        <ul className="flex flex-col gap-1">
+          {state.validations.map((v) => (
+            <li
+              key={v.attempt}
+              className="demo-mono border border-hairline px-2 py-1 text-[12px]"
+            >
+              <span className={v.ok ? "text-ink" : "text-accent"}>
+                {v.attempt + 1}회차 검증 {v.ok ? "통과" : "실패"}
+              </span>
+              {!v.ok && (
+                <span className="ml-2 text-muted">
+                  {v.issues.map((i) => `${i.path}: ${i.message}`).join(" / ")}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
 
       <pre className="demo-mono min-h-40 overflow-x-auto whitespace-pre-wrap border border-hairline bg-paper p-3 text-[13px] leading-relaxed">

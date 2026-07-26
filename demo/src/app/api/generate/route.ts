@@ -1,6 +1,12 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { buildMessageParams, getClient } from "@/lib/anthropic";
 import { LimitError } from "@/lib/limits";
+import {
+  MAX_RETRIES,
+  buildRetryPrompt,
+  validateAgainstSchema,
+  type ValidationIssue,
+} from "@/lib/validate";
 import type { GenerateRequest, SseFrame } from "@/lib/wire";
 
 // Fluid Compute(Node.js 런타임)에서 스트리밍한다. edge 런타임은 쓰지 않는다.
@@ -41,30 +47,75 @@ export async function POST(request: Request) {
     async start(controller) {
       try {
         const params = buildMessageParams(body);
-        // output_config 등 일부 필드는 SDK 타입 정의가 아직 따라오지 않아 단언이 필요하다.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const messageStream = getClient().messages.stream(params as any);
+        let attempt = 0;
+        let userText = body.user;
+        let totalIn = 0;
+        let totalOut = 0;
 
-        for await (const event of messageStream) {
-          if (
-            event.type === "content_block_delta" &&
-            event.delta.type === "text_delta"
-          ) {
-            controller.enqueue(frame({ type: "delta", text: event.delta.text }));
+        for (;;) {
+          const attemptParams = {
+            ...params,
+            messages: [{ role: "user", content: userText }],
+          };
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const messageStream = getClient().messages.stream(attemptParams as any);
+
+          let collected = "";
+          for await (const event of messageStream) {
+            if (
+              event.type === "content_block_delta" &&
+              event.delta.type === "text_delta"
+            ) {
+              collected += event.delta.text;
+              controller.enqueue(
+                frame({ type: "delta", text: event.delta.text }),
+              );
+            }
           }
-        }
 
-        const final = await messageStream.finalMessage();
-        controller.enqueue(
-          frame({
-            type: "done",
-            stop_reason: final.stop_reason,
-            usage: {
-              input_tokens: final.usage.input_tokens,
-              output_tokens: final.usage.output_tokens,
-            },
-          }),
-        );
+          const final = await messageStream.finalMessage();
+          totalIn += final.usage.input_tokens;
+          totalOut += final.usage.output_tokens;
+
+          if (!body.json_schema) {
+            controller.enqueue(
+              frame({
+                type: "done",
+                stop_reason: final.stop_reason,
+                usage: { input_tokens: totalIn, output_tokens: totalOut },
+              }),
+            );
+            break;
+          }
+
+          let issues: ValidationIssue[];
+          try {
+            issues = validateAgainstSchema(JSON.parse(collected), body.json_schema);
+          } catch {
+            issues = [{ path: "(root)", message: "JSON 파싱에 실패했습니다." }];
+          }
+
+          controller.enqueue(
+            frame({ type: "validation", attempt, ok: issues.length === 0, issues }),
+          );
+
+          if (issues.length === 0 || attempt >= MAX_RETRIES) {
+            controller.enqueue(
+              frame({
+                type: "done",
+                stop_reason: final.stop_reason,
+                usage: { input_tokens: totalIn, output_tokens: totalOut },
+              }),
+            );
+            break;
+          }
+
+          attempt += 1;
+          userText = buildRetryPrompt(body.user, collected, issues);
+          controller.enqueue(
+            frame({ type: "delta", text: `\n\n— 재요청 ${attempt}회차 —\n\n` }),
+          );
+        }
       } catch (err) {
         controller.enqueue(frame(toErrorFrame(err)));
       } finally {

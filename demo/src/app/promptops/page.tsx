@@ -149,6 +149,15 @@ function reduceFrame(prev: RunState, f: SseFrame): RunState {
   if (f.type === "delta") {
     return { ...prev, status: "running", text: prev.text + f.text };
   }
+  if (f.type === "validation") {
+    return {
+      ...prev,
+      validations: [
+        ...(prev.validations ?? []),
+        { attempt: f.attempt, ok: f.ok, issues: f.issues },
+      ],
+    };
+  }
   if (f.type === "done") {
     return { ...prev, status: "done", usage: f.usage, stop_reason: f.stop_reason };
   }

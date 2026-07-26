@@ -141,9 +141,9 @@ export const PRESETS: Preset[] = [
     slide: "s07",
     label: "구조화 출력",
     desc: "자유 텍스트와 스키마 강제를 비교합니다. 스키마 쪽은 응답을 검증하고, 실패하면 오류를 붙여 재요청합니다.",
-    snippetId: "structured-output",
+    snippetId: "structured-validate",
     snippetCaption:
-      "output_config.format으로 형식을 강제하고, 받는 쪽에서 한 번 더 검증합니다.",
+      "형식을 강제해도 어긋날 수 있으므로, 받는 쪽에서 필드·타입·값 범위를 확인합니다.",
     variants: [
       {
         label: "자유 텍스트",
