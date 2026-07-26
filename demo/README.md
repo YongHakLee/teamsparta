@@ -58,6 +58,8 @@ npm run build:snippets && npm run typecheck && npm run lint && npm run test
 - [ ] `.env.local`의 키를 망가뜨린 상태에서 변형 버튼을 눌러 선택한 뒤 `실행`으로
       확인하면 `저장된 응답` 배지가 뜬다. 폴백은 왼쪽 조작부의 단일 `실행`
       경로에만 걸려 있고, `프리셋 전체 실행`(변형 그리드)에는 걸려 있지 않다
+- [ ] **`.env.local`의 API 키를 원래 값으로 되돌렸다** (`.env.local.bak` 백업 파일이
+      남지 않았는지 확인)
 
 ### fixture 기록 절차 (참고)
 

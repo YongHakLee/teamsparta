@@ -252,6 +252,7 @@ function VariantGrid({ variants }: { variants: VariantRun[] }) {
                     ))}
                   </div>
                 )}
+                {/* 폴백이 단일 실행에만 걸려 있어 지금은 닿지 않는 경로다 (프리셋 전체 실행에는 폴백이 없다) */}
                 {r.fromFixture && (
                   <div className="demo-mono text-[11px] text-accent">저장된 응답</div>
                 )}
