@@ -8,7 +8,7 @@ const SRC = path.join(process.cwd(), "src");
 const OUT = path.join(SRC, "data", "snippets.generated.json");
 
 // 반드시 존재해야 하는 스니펫. 하나라도 없으면 빌드를 실패시켜 조용한 유실을 막는다.
-const REQUIRED = ["sampling"];
+const REQUIRED = ["sampling", "prompt-patterns", "structured-output"];
 
 const START = /^\s*\/\/\s*#region\s+snippet:([\w-]+)\s*$/;
 const END = /^\s*\/\/\s*#endregion\s*$/;

@@ -38,14 +38,24 @@ export function buildMessageParams(req: GenerateRequest) {
   if (req.top_p !== undefined) params.top_p = req.top_p;
   if (req.top_k !== undefined) params.top_k = req.top_k;
 
-  // effort와 구조화 출력은 둘 다 output_config 아래로 들어간다.
-  const outputConfig: Record<string, unknown> = {};
-  if (req.effort) outputConfig.effort = req.effort;
-  if (req.json_schema) {
-    outputConfig.format = { type: "json_schema", schema: req.json_schema };
-  }
-  if (Object.keys(outputConfig).length > 0) params.output_config = outputConfig;
+  // effort는 output_config 아래로 들어간다. 구조화 출력(json_schema)은
+  // withJsonSchema가 output_config.format을 채워 넣는다.
+  if (req.effort) params.output_config = { effort: req.effort };
 
-  return params;
+  return req.json_schema ? withJsonSchema(params, req.json_schema) : params;
+}
+// #endregion
+
+/** s07 — 스키마를 output_config.format에 실어 형식을 강제한다. */
+// #region snippet:structured-output
+export function withJsonSchema(
+  params: Record<string, unknown>,
+  schema: Record<string, unknown>,
+): Record<string, unknown> {
+  const prev = (params.output_config ?? {}) as Record<string, unknown>;
+  return {
+    ...params,
+    output_config: { ...prev, format: { type: "json_schema", schema } },
+  };
 }
 // #endregion
