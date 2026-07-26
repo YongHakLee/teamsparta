@@ -39,7 +39,8 @@ export default function ResponsePane({
       {state.error && (
         <div className="border border-accent bg-paper p-3">
           <div className="demo-mono text-[12px] font-bold tracking-[0.14em] text-accent">
-            HTTP {state.error.status} · {state.error.name}
+            {state.error.status > 0 && `HTTP ${state.error.status} · `}
+            {state.error.name}
           </div>
           <p className="demo-mono mt-2 text-[13px] leading-relaxed break-words">
             {state.error.message}

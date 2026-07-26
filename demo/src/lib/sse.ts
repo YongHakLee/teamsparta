@@ -30,32 +30,42 @@ export async function streamGenerate(
   req: GenerateRequest,
   onFrame: (f: SseFrame) => void,
 ): Promise<void> {
-  const res = await fetch("/api/generate", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(req),
-  });
+  try {
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(req),
+    });
 
-  if (!res.body) {
+    if (!res.body) {
+      onFrame({
+        type: "error",
+        status: res.status,
+        name: "NoBody",
+        message: "응답 본문이 비어 있습니다.",
+      });
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const { frames, rest } = parseSseChunk(buffer);
+      buffer = rest;
+      frames.forEach(onFrame);
+    }
+  } catch (err) {
+    // fetch나 reader.read()가 throw했다는 건 HTTP 응답 자체를 받지 못했다는 뜻이라 status가 없다 — 그래서 0.
     onFrame({
       type: "error",
-      status: res.status,
-      name: "NoBody",
-      message: "응답 본문이 비어 있습니다.",
+      status: 0,
+      name: "NetworkError",
+      message: `요청을 보내지 못했습니다: ${err instanceof Error ? err.message : String(err)}`,
     });
-    return;
-  }
-
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const { frames, rest } = parseSseChunk(buffer);
-    buffer = rest;
-    frames.forEach(onFrame);
   }
 }
