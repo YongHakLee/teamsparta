@@ -94,12 +94,11 @@ export const promptPatterns: PatternSample[] = [
     structured: true,
     prompt:
       "리뷰를 분류하고 JSON으로만 답해줘. 스키마: {sentiment, confidence, aspects}",
-    /* s07이 16:9를 넘지 않으려면 5줄이 상한이다. aspects는 속성→극성 맵으로 접어
-       한 줄에 넣되, 「배송은 긍정 · 품질은 부정」 대비는 남긴다. */
+    /* s07 본문이 세 줄이라 출력은 4줄이 상한이다. sentiment·confidence를 한 줄로 접고,
+       aspects는 속성→극성 맵으로 접어 「배송은 긍정 · 품질은 부정」 대비를 남긴다. */
     output: [
       "{",
-      '  "sentiment": "negative",',
-      '  "confidence": 0.82,',
+      '  "sentiment": "negative", "confidence": 0.82,',
       '  "aspects": { "배송": "positive", "품질": "negative" }',
       "}",
     ],
