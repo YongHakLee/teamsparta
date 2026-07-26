@@ -23,8 +23,17 @@ npm run dev                  # http://localhost:3100
 
 ## 배포
 
-Vercel 프로젝트의 **Root Directory를 `demo`로** 설정합니다.
-환경변수는 `ANTHROPIC_API_KEY` 하나만 등록하면 됩니다.
+**https://ai-engineering-demo.vercel.app/promptops** (Vercel 프로젝트 `ai-engineering-demo`)
+
+`demo/` 디렉터리에서 `vercel` CLI로 링크·배포합니다(디렉터리 자체가 프로젝트 루트가 되므로
+Root Directory 설정이 따로 필요 없습니다). 환경변수는 `ANTHROPIC_API_KEY` 하나이며
+Production·Preview 양쪽에 등록돼 있습니다.
+
+```bash
+cd demo
+vercel deploy          # preview
+vercel deploy --prod   # production
+```
 
 ## 검증
 
@@ -79,12 +88,19 @@ npm run build:snippets && npm run typecheck && npm run lint && npm run test
 찍힐 수 있습니다 — 정상이니 한 블록만 복사**해 `src/data/fixtures.json`에
 합칩니다.
 
-### 배포 후 확인
+### 배포 후 확인 (2026-07-26 완료)
 
-에러 프레임의 이름은 `instanceof Anthropic.BadRequestError` 같은 체인으로
-잡습니다(`route.ts`의 `toErrorFrame`). Vercel 프로덕션 번들 최소화로 클래스
-이름 문자열이 뭉개져도 `instanceof` 판정 자체는 영향받지 않으므로 별도 확인
-절차는 필요 없습니다.
+프로덕션 배포에서 실제로 확인한 것:
+
+| 확인 | 결과 |
+|---|---|
+| `/` · `/promptops` | 둘 다 200 |
+| opus-5 + `temperature` | `{"status":400,"name":"BadRequestError","message":"… \`temperature\` is deprecated for this model."}` — **번들 최소화에도 이름이 그대로 나온다** |
+| 화이트리스트 밖 모델 | `{"status":400,"name":"LimitError", …}` — Anthropic에 도달하기 전 차단 |
+| haiku 실호출 | 스트리밍 후 `{"type":"done","stop_reason":"end_turn","usage":{…}}` |
+
+에러 이름은 `instanceof Anthropic.BadRequestError` 체인으로 잡으므로(`route.ts`의
+`toErrorFrame`) 클래스 이름 문자열이 뭉개져도 판정이 영향받지 않습니다.
 
 ## 강의 종료 후
 

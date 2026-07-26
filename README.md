@@ -28,9 +28,11 @@ AI 엔지니어 · 응용통계학 박사과정. Team Sparta 지원용 이력서
 PromptOps 콘솔입니다. 조작한 값이 실제 요청 JSON의 어느 필드가 되는지, 그 값이 지나가는
 소스 코드가 무엇인지, 응답이 어떻게 달라지는지를 한 화면에서 보여줍니다.
 
+**https://ai-engineering-demo.vercel.app/promptops**
+
 이 앱은 **위 GitHub Pages 사이트에 포함되지 않습니다.** 서버 라우트(`/api/generate`)가
 있어 정적 export에 담을 수 없어서, 레포 루트와 분리된 독립 Next 앱으로 두고 Vercel에
-따로 배포합니다(Root Directory를 `demo`로, 환경변수는 `ANTHROPIC_API_KEY` 하나).
+따로 배포합니다(환경변수는 `ANTHROPIC_API_KEY` 하나).
 
 ```bash
 cd demo

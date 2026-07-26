@@ -12,8 +12,10 @@
 
 | 환경 | 주소 | 준비 |
 |---|---|---|
+| **배포(발표용)** | **https://ai-engineering-demo.vercel.app/promptops** | 없음 — 키가 Vercel에 등록돼 있습니다 |
 | 로컬 | `http://localhost:3100/promptops` | `demo/.env.local`에 `ANTHROPIC_API_KEY`, `npm run build:snippets` 후 `npm run dev` |
-| 배포 | Vercel 프로젝트 URL의 `/promptops` | Root Directory를 `demo`로, 환경변수 `ANTHROPIC_API_KEY` 하나 |
+
+발표는 배포 주소로 하는 편이 안전합니다(로컬 dev 서버는 노트북 절전·포트 충돌에 걸립니다).
 
 `npm run build:snippets`를 먼저 돌리지 않으면 `코드` 탭이 동작하지 않습니다(스니펫이
 저장소에 없는 생성물입니다).
