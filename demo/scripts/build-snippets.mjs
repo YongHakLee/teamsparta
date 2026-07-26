@@ -18,14 +18,18 @@ async function walk(dir) {
   for (const e of await readdir(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
     if (e.isDirectory()) out.push(...(await walk(p)));
-    else if (/\.(ts|tsx)$/.test(e.name) && !e.name.endsWith(".test.ts")) {
+    else if (
+      /\.(ts|tsx)$/.test(e.name) &&
+      !e.name.endsWith(".test.ts") &&
+      !e.name.endsWith(".test.tsx")
+    ) {
       out.push(p);
     }
   }
   return out;
 }
 
-function extract(text) {
+function extract(text, filePath) {
   const found = [];
   const lines = text.split("\n");
   let id = null;
@@ -33,6 +37,13 @@ function extract(text) {
   for (const line of lines) {
     const m = line.match(START);
     if (m) {
+      // 열린 구간이 있는 상태에서 새 START를 만나면 즉시 실패.
+      // 중첩된 마커를 놓치지 않기 위함.
+      if (id !== null) {
+        throw new Error(
+          `스니펫 마커 중첩 오류: snippet:${id}가 닫히기 전에 snippet:${m[1]}이(가) 열렸습니다 (${filePath})`,
+        );
+      }
       id = m[1];
       buf = [];
       continue;
@@ -44,6 +55,13 @@ function extract(text) {
     }
     if (id) buf.push(line);
   }
+  // 파일 끝에도 열린 구간이 남아 있으면 즉시 실패.
+  // 닫히지 않은 마커를 놓치지 않기 위함.
+  if (id !== null) {
+    throw new Error(
+      `스니펫 마커 미종료 오류: snippet:${id}에 #endregion이 없습니다 (${filePath})`,
+    );
+  }
   return found;
 }
 
@@ -52,7 +70,7 @@ const snippets = {};
 
 for (const file of files) {
   const text = await readFile(file, "utf8");
-  for (const { id, source } of extract(text)) {
+  for (const { id, source } of extract(text, file)) {
     if (snippets[id]) {
       throw new Error(`스니펫 id 중복: ${id} (${file})`);
     }
