@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+/* 루트 앱(src/app/globals.css)과 같은 값. 한쪽을 바꾸면 다른 쪽도 바꾼다. */
+:root {
+  --paper: #faf7f1;
+  --ink: #262019;
+  --accent: #a3542e;
+  --muted: #6b6259;
+  --faint: #8a8177;
+  --hairline: #e2d9cd;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-hairline: var(--hairline);
+  --font-sans: var(--font-pretendard);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
+
+/* 강의 덱(lecture.css)과 같은 등폭 스택 — 요청 JSON·코드·토큰 수 표기에 쓴다 */
+.demo-mono {
+  font-family: ui-monospace, Menlo, Consolas, var(--font-pretendard), monospace;
+}

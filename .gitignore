@@ -56,3 +56,8 @@ prompt.md
 samsung.html
 /projects/
 .prompt.md
+
+# demo/ — 독립 Next 앱 (루트의 /node_modules 규칙은 루트에만 적용됨)
+demo/node_modules/
+demo/.next/
+demo/src/data/snippets.generated.json
