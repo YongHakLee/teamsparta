@@ -187,14 +187,27 @@ function VariantGrid({ variants }: { variants: VariantRun[] }) {
               )}
             </div>
             {v.runs.map((r, i) => (
-              <pre
-                key={i}
-                className="demo-mono min-h-10 whitespace-pre-wrap border border-hairline bg-paper p-2 text-[12px] leading-relaxed"
-              >
-                {r.error
-                  ? `${r.error.status > 0 ? `HTTP ${r.error.status} · ` : ""}${r.error.name}\n${r.error.message}`
-                  : r.text || "…"}
-              </pre>
+              <div key={i} className="flex flex-col gap-1">
+                {r.validations && r.validations.length > 0 && (
+                  <div className="demo-mono flex flex-col gap-0.5 text-[11px]">
+                    {r.validations.map((val) => (
+                      <span
+                        key={val.attempt}
+                        className={val.ok ? "text-ink" : "text-accent"}
+                      >
+                        {val.attempt + 1}회차 검증 {val.ok ? "통과" : "실패"}
+                        {!val.ok &&
+                          ` — ${val.issues.map((iss) => `${iss.path}: ${iss.message}`).join(" / ")}`}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <pre className="demo-mono min-h-10 whitespace-pre-wrap border border-hairline bg-paper p-2 text-[12px] leading-relaxed">
+                  {r.error
+                    ? `${r.error.status > 0 ? `HTTP ${r.error.status} · ` : ""}${r.error.name}\n${r.error.message}`
+                    : r.text || "…"}
+                </pre>
+              </div>
             ))}
           </div>
         );

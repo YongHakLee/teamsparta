@@ -63,6 +63,38 @@ describe("buildMessageParams", () => {
     });
   });
 
+  it("enforce_schema: false면 output_config에 format을 싣지 않는다", () => {
+    const schema = { type: "object", properties: {} };
+    const withEffort = buildMessageParams({
+      model: "claude-opus-5",
+      user: "안녕",
+      effort: "low",
+      json_schema: schema,
+      enforce_schema: false,
+    });
+    expect(withEffort.output_config).toEqual({ effort: "low" });
+
+    const withoutEffort = buildMessageParams({
+      model: "claude-haiku-4-5",
+      user: "안녕",
+      json_schema: schema,
+      enforce_schema: false,
+    });
+    expect(withoutEffort).not.toHaveProperty("output_config");
+  });
+
+  it("enforce_schema를 지정하지 않으면 기존처럼 format이 실린다", () => {
+    const schema = { type: "object", properties: {} };
+    const p = buildMessageParams({
+      model: "claude-haiku-4-5",
+      user: "안녕",
+      json_schema: schema,
+    });
+    expect(p.output_config).toEqual({
+      format: { type: "json_schema", schema },
+    });
+  });
+
   it("max_tokens를 상한으로 자른다", () => {
     const p = buildMessageParams({
       model: "claude-haiku-4-5",

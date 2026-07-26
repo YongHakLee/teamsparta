@@ -20,6 +20,29 @@ export type Preset = {
 
 const REVIEW = "배송은 빨랐지만 품질이 별로였다";
 
+/** s07 구조화 출력 두 변형(강제/비강제)이 함께 쓰는 스키마. */
+const STRUCTURED_SCHEMA = {
+  type: "object",
+  properties: {
+    sentiment: {
+      type: "string",
+      enum: ["positive", "negative", "neutral"],
+    },
+    confidence: { type: "number" },
+    aspects: {
+      type: "object",
+      properties: {
+        배송: { type: "string", enum: ["positive", "negative"] },
+        품질: { type: "string", enum: ["positive", "negative"] },
+      },
+      required: ["배송", "품질"],
+      additionalProperties: false,
+    },
+  },
+  required: ["sentiment", "confidence", "aspects"],
+  additionalProperties: false,
+};
+
 export const PRESETS: Preset[] = [
   {
     id: "randomness",
@@ -140,7 +163,7 @@ export const PRESETS: Preset[] = [
     id: "structured",
     slide: "s07",
     label: "구조화 출력",
-    desc: "자유 텍스트와 스키마 강제를 비교합니다. 스키마 쪽은 응답을 검증하고, 실패하면 오류를 붙여 재요청합니다.",
+    desc: "자유 텍스트, 스키마 강제, 프롬프트로만 요구한 JSON을 비교합니다. 강제 쪽은 애초에 어긋날 수 없고, 프롬프트로만 요구한 쪽은 실제로 어긋나 검증에 걸리면 오류를 붙여 재요청합니다.",
     snippetId: "structured-validate",
     snippetCaption:
       "형식을 강제해도 어긋날 수 있으므로, 받는 쪽에서 필드·타입·값 범위를 확인합니다.",
@@ -161,27 +184,18 @@ export const PRESETS: Preset[] = [
           user: `다음 리뷰를 분석해줘.\n리뷰: "${REVIEW}"`,
           temperature: 0,
           max_tokens: 512,
-          json_schema: {
-            type: "object",
-            properties: {
-              sentiment: {
-                type: "string",
-                enum: ["positive", "negative", "neutral"],
-              },
-              confidence: { type: "number" },
-              aspects: {
-                type: "object",
-                properties: {
-                  배송: { type: "string", enum: ["positive", "negative"] },
-                  품질: { type: "string", enum: ["positive", "negative"] },
-                },
-                required: ["배송", "품질"],
-                additionalProperties: false,
-              },
-            },
-            required: ["sentiment", "confidence", "aspects"],
-            additionalProperties: false,
-          },
+          json_schema: STRUCTURED_SCHEMA,
+        },
+      },
+      {
+        label: "JSON 요청 — 형식 강제 없이",
+        request: {
+          model: "claude-haiku-4-5",
+          user: `다음 리뷰를 분석해서 JSON으로 답해줘.\n리뷰: "${REVIEW}"`,
+          temperature: 0,
+          max_tokens: 512,
+          json_schema: STRUCTURED_SCHEMA,
+          enforce_schema: false,
         },
       },
     ],

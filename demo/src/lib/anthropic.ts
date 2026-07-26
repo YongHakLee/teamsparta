@@ -42,7 +42,11 @@ export function buildMessageParams(req: GenerateRequest) {
   // withJsonSchema가 output_config.format을 채워 넣는다.
   if (req.effort) params.output_config = { effort: req.effort };
 
-  return req.json_schema ? withJsonSchema(params, req.json_schema) : params;
+  // enforce_schema가 false면 API에 형식을 강제하지 않는다 — s07에서
+  // "그래도 깨진다"를 보이려면 모델이 실제로 스키마를 어길 수 있어야 한다.
+  return req.json_schema && req.enforce_schema !== false
+    ? withJsonSchema(params, req.json_schema)
+    : params;
 }
 // #endregion
 

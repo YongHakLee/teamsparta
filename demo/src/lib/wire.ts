@@ -16,6 +16,12 @@ export type GenerateRequest = {
   effort?: EffortLevel;
   /** s07 구조화 출력. JSON Schema 객체 */
   json_schema?: Record<string, unknown>;
+  /**
+   * `false`면 스키마를 API에 강제하지 않고(output_config.format 미사용),
+   * 서버가 응답을 받은 뒤 같은 스키마로 검증만 한다. 기본값은 강제(true).
+   * s07의 "형식을 강제해도 깨질 수 있다 → 받는 쪽에서 검증한다"를 보이기 위한 것이다.
+   */
+  enforce_schema?: boolean;
 };
 
 /** /api/generate → 브라우저 SSE 프레임 */
